@@ -3,13 +3,13 @@ import Link from "next/link";
 
 export const Card = () => {
   return (
-    <div className="flex gap-3">
+    <div className="flex  gap-3">
       <Image
         height={1000}
         width={1000}
         alt="image"
         src="https://images.pexels.com/photos/9638689/pexels-photo-9638689.jpeg?auto=compress&cs=tinysrgb&w=400"
-        className="flex-1"
+        className=" h-[300px] w-[300px]"
       />
       <div className="flex-1 flex flex-col gap-2">
         <div className="flex gap-2">
