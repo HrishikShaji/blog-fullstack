@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.ql-container {
+	font-size:28px
+}
+
+.quill > .ql-container > .ql-editor.ql-blanck::before{
+	color:#b3b3b1
+}
