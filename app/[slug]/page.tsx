@@ -1,9 +1,10 @@
+import { Comments } from "@/components/Comments";
 import { Menu } from "@/components/Menu";
 import Image from "next/image";
 
 const Page = () => {
   return (
-    <div>
+    <div className="">
       <div className="flex items-center gap-[50px]">
         <div className="flex-1 relative flex flex-col gap-10">
           <h1 className="text-3xl">Just a heading</h1>
@@ -49,6 +50,9 @@ const Page = () => {
             enim eu turpis. Viverra suspendisse potenti nullam ac tortor vitae
             purus faucibus.
           </p>
+          <div>
+            <Comments />
+          </div>
         </div>
         <Menu />
       </div>
