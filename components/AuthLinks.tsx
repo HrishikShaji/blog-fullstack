@@ -1,15 +1,17 @@
+"use client";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
 export const AuthLinks = () => {
-  const status = "notauthenticated";
+  const { status } = useSession();
   return (
     <>
-      {status === "notauthenticated" ? (
+      {status === "unauthenticated" ? (
         <Link href="/login">Login</Link>
       ) : (
         <>
           <Link href="/write">Write</Link>
-          <span>Logout</span>
+          <button onClick={() => signOut()}>Logout</button>
         </>
       )}
     </>
