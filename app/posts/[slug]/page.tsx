@@ -2,12 +2,26 @@ import { Comments } from "@/components/Comments";
 import { Menu } from "@/components/Menu";
 import Image from "next/image";
 
-const Page = () => {
+const getData = async (slug) => {
+  const res = await fetch(`http://localhost:3000/api/posts/${slug}`, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed");
+  }
+
+  return res.json();
+};
+const Page = async ({ params }) => {
+  const { slug } = params;
+
+  const data = await getData(slug);
   return (
     <div className="">
       <div className="flex items-center gap-[50px]">
         <div className="flex-1 relative flex flex-col gap-10">
-          <h1 className="text-3xl">Just a heading</h1>
+          <h1 className="text-3xl">{data.title}</h1>
           <div className="flex items-center gap-[20px]">
             <Image
               className="h-20 w-20 rounded-full object-cover"
@@ -17,7 +31,7 @@ const Page = () => {
               alt="image"
             />
             <div className="relative h-[50px] w-[50px]">
-              <span>John doe</span>
+              <span>{data.user.email}</span>
               <span>10.3.2023</span>
             </div>
           </div>
@@ -34,22 +48,7 @@ const Page = () => {
       </div>
       <div className="flex gap-[50px]">
         <div className="flex-[5]">
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            tortor pretium viverra suspendisse potenti. Et netus et malesuada
-            fames ac turpis. Lacus vel facilisis volutpat est velit egestas dui
-            id ornare. Praesent elementum facilisis leo vel fringilla est
-            ullamcorper eget nulla. Facilisis leo vel fringilla est ullamcorper.
-            Arcu dictum varius duis at consectetur lorem donec massa. Arcu felis
-            bibendum ut tristique et egestas quis. Dui accumsan sit amet nulla
-            facilisi. Tristique senectus et netus et malesuada fames ac. Nulla
-            at volutpat diam ut venenatis tellus in metus. Magna ac placerat
-            vestibulum lectus mauris ultrices. Augue interdum velit euismod in
-            pellentesque massa. Aliquet eget sit amet tellus cras adipiscing
-            enim eu turpis. Viverra suspendisse potenti nullam ac tortor vitae
-            purus faucibus.
-          </p>
+          <p>{data.desc}</p>
           <div>
             <Comments />
           </div>
