@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { Card } from "./Card";
 import { Menu } from "./Menu";
 import { Pagination } from "./Pagination";
@@ -21,30 +18,24 @@ interface CardListProps {
   page: number;
 }
 
-export const CardList: React.FC<CardListProps> = ({ page }) => {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    fetch(`http://localhost:3000/api/posts?page=${page}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      });
-  }, []);
+export const CardList: React.FC<CardListProps> = async ({ page }) => {
+  const { posts, count } = await getData(page);
 
-  console.log(data);
+  const POST_PER_PAGE = 2;
+
+  const hasPrev = POST_PER_PAGE * (page - 1) > 0;
+  const hasNext = POST_PER_PAGE * (page - 1) + POST_PER_PAGE < count;
+
   return (
     <div>
       <h1 className="text-3xl w-full">Recent Posts</h1>
       <div className="flex gap-3">
         <div className="w-[75%]">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {posts?.map((item) => <Card item={item} key={item.id} />)}
         </div>
         <Menu />
       </div>
-      <Pagination />
+      <Pagination page={page} hasNext={hasNext} hasPrev={hasPrev} />
     </div>
   );
 };

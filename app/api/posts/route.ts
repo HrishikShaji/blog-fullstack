@@ -6,14 +6,19 @@ export const GET = async (req: Request) => {
 
   const page = searchParams.get("page");
   const POST_PER_PAGE = 2;
+
+  const query = {
+    take: POST_PER_PAGE,
+    skip: POST_PER_PAGE * (page - 1),
+  };
   console.log("its here", page);
   try {
-    const posts = await prisma.post.findMany({
-      take: POST_PER_PAGE,
-      skip: POST_PER_PAGE * (page - 1),
-    });
+    const [posts, count] = await prisma.$transaction([
+      prisma.post.findMany(query),
+      prisma.post.count(),
+    ]);
     console.log(posts);
-    return new NextResponse(JSON.stringify(posts, { status: 200 }));
+    return new NextResponse(JSON.stringify({ posts, count }, { status: 200 }));
   } catch (err) {
     return new NextResponse(
       JSON.stringify({ message: "Something went wrong" }, { status: 500 }),
