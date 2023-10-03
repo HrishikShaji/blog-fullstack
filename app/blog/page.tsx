@@ -1,12 +1,15 @@
 import { CardList } from "@/components/CardList";
 import { Menu } from "@/components/Menu";
 
-const Page = () => {
+const Page = ({ searchParams }) => {
+  const page = parseInt(searchParams.page) || 1;
+  const { cat } = searchParams;
+
   return (
     <div>
-      <h1>Style Blog</h1>
+      <h1>{cat} Blog</h1>
       <div>
-        <CardList page={2} />
+        <CardList page={page} cat={cat} />
       </div>
     </div>
   );

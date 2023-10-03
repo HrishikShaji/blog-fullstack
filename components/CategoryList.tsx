@@ -17,7 +17,7 @@ export const CategoryList = () => {
       <div className="w-full flex justify-center items-center">
         <div className="flex gap-4">
           {data?.map((item) => (
-            <Link href="/blog?cat=style" key={item.id}>
+            <Link href={`/blog?cat=${item.slug}`} key={item.id}>
               {item.title}
             </Link>
           ))}
