@@ -1,5 +1,7 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
@@ -7,6 +9,18 @@ import "react-quill/dist/quill.bubble.css";
 const Page = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
+
+  const { data, status } = useSession();
+
+  const router = useRouter();
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
+
+  if (status === "authenticated") {
+    router.push("/");
+  }
   return (
     <div className="flex flex-col gap-2">
       <input placeholder="Title" />

@@ -6,7 +6,7 @@ const Page = () => {
     <div>
       <h1>Style Blog</h1>
       <div>
-        <CardList />
+        <CardList page={2} />
       </div>
     </div>
   );
