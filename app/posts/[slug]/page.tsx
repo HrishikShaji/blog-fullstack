@@ -50,7 +50,7 @@ const Page = async ({ params }) => {
         <div className="flex-[5]">
           <p>{data.desc}</p>
           <div>
-            <Comments />
+            <Comments postSlug={slug} />
           </div>
         </div>
         <Menu />
