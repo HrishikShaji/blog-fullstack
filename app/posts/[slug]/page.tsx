@@ -31,7 +31,7 @@ const Page = async ({ params }) => {
               alt="image"
             />
             <div className="relative h-[50px] w-[50px]">
-              <span>{data.user.email}</span>
+              <span>{data?.user.email}</span>
               <span>10.3.2023</span>
             </div>
           </div>
