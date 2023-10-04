@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
+import { useState } from "react";
 
 interface CommentsProps {
   postSlug: string;
@@ -24,17 +25,31 @@ const fetcher = async (url) => {
 export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
   const { status } = useSession();
 
-  const { data, isLoading } = useSWR(
+  const { data, isLoading, mutate } = useSWR(
     `http://localhost:3000/api/comments?postSlug=${postSlug}`,
     fetcher,
   );
+
+  const [desc, setDesc] = useState("");
+
+  const handleSubmit = async () => {
+    await fetch("/api/comments", {
+      method: "POST",
+      body: JSON.stringify({ desc, postSlug }),
+    });
+    mutate();
+    setDesc("");
+  };
   return (
     <div className="flex flex-col gap-10">
       <h1>Comments</h1>
       {status === "authenticated" ? (
         <div className="flex gap-2">
-          <textarea />
-          <button>Send</button>
+          <textarea
+            className="text-black"
+            onChange={(e) => setDesc(e.target.value)}
+          />
+          <button onClick={handleSubmit}>Send</button>
         </div>
       ) : (
         <Link href="/login">Login to write a comment</Link>

@@ -18,7 +18,7 @@ const Page = () => {
     return <div>Loading...</div>;
   }
 
-  if (status === "authenticated") {
+  if (status === "unauthenticated") {
     router.push("/");
   }
   return (
