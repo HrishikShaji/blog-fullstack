@@ -31,13 +31,13 @@ export const CardList: React.FC<CardListProps> = async ({ page, cat }) => {
   const hasNext = POST_PER_PAGE * (page - 1) + POST_PER_PAGE < count;
 
   return (
-    <div>
-      <h1 className="text-3xl w-full">Recent Posts</h1>
-      <div className="flex gap-3">
-        <div className="w-[75%]">
+    <div className="flex flex-col gap-10">
+      <h1 className="text-3xl font-semibold w-full">Recent Posts</h1>
+
+      <div className="flex  gap-3">
+        <div className="w-full flex flex-col gap-3">
           {posts?.map((item) => <Card item={item} key={item.id} />)}
         </div>
-        <Menu />
       </div>
       <Pagination page={page} hasNext={hasNext} hasPrev={hasPrev} />
     </div>

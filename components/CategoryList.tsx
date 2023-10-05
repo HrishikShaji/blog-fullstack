@@ -12,12 +12,16 @@ export const CategoryList = () => {
       });
   }, []);
   return (
-    <div className="flex flex-col gap-5 p-10">
-      <h1 className="text-xl">Popular categories</h1>
-      <div className="w-full flex justify-center items-center">
+    <div className="flex flex-col gap-5 py-10">
+      <h1 className="text-3xl font-semibold">Popular categories</h1>
+      <div className="w-full flex">
         <div className="flex gap-4">
           {data?.map((item) => (
-            <Link href={`/blog?cat=${item.slug}`} key={item.id}>
+            <Link
+              className="px-3 py-2 border-2 border-white"
+              href={`/blog?cat=${item.slug}`}
+              key={item.id}
+            >
               {item.title}
             </Link>
           ))}
