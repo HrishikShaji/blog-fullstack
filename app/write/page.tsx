@@ -2,7 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { cache, useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.bubble.css";
 import {
@@ -21,12 +21,16 @@ const Page = () => {
 
   const [file, setFile] = useState(null);
   const { data, status } = useSession();
+  const [media, setMedia] = useState("");
+  const [title, setTitle] = useState("");
+  const [cat, setCat] = useState("");
 
   const router = useRouter();
 
   useEffect(() => {
     const upload = () => {
-      const storageRef = ref(storage, "images/rivers.jpg");
+      const name = new Date().getTime + file.name;
+      const storageRef = ref(storage, name);
 
       const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -58,12 +62,14 @@ const Page = () => {
           // Handle successful uploads on complete
           // For instance, get the download URL: https://firebasestorage.googleapis.com/...
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log("File available at", downloadURL);
+            setMedia(downloadURL);
           });
         },
       );
     };
-  }, []);
+
+    file && upload();
+  }, [file]);
 
   if (status === "loading") {
     return <div>Loading...</div>;
@@ -72,9 +78,32 @@ const Page = () => {
   if (status === "unauthenticated") {
     router.push("/");
   }
+
+  const slugify = (str) =>
+    str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+  const handleSubmit = async () => {
+    const res = await fetch("/api/posts", {
+      method: "POST",
+      body: JSON.stringify({
+        title,
+        desc: value,
+        img: media,
+        slug: slugify(title),
+        catSlug: cat,
+      }),
+    });
+    console.log(res);
+  };
   return (
     <div className="flex flex-col gap-2">
-      <input placeholder="Title" />
+      <input placeholder="Title" onChange={(e) => setTitle(e.target.value)} />
+      <input placeholder="Category" onChange={(e) => setCat(e.target.value)} />
       <div className="flex h-[700px] flex-col items-start">
         <button
           onClick={() => setOpen(!open)}
@@ -104,7 +133,12 @@ const Page = () => {
           onChange={setValue}
           placeholder="Tell your story..."
         />
-        <button className="px-3 py-2 border-white border-2">Publish</button>
+        <button
+          onClick={handleSubmit}
+          className="px-3 py-2 border-white border-2"
+        >
+          Publish
+        </button>
       </div>
     </div>
   );
