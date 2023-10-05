@@ -24,7 +24,7 @@ const fetcher = async (url) => {
 
 export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
   const { status } = useSession();
-
+  const [loading, setLoading] = useState(false);
   const { data, isLoading, mutate } = useSWR(
     `http://localhost:3000/api/comments?postSlug=${postSlug}`,
     fetcher,
@@ -33,12 +33,20 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
   const [desc, setDesc] = useState("");
 
   const handleSubmit = async () => {
-    await fetch("/api/comments", {
-      method: "POST",
-      body: JSON.stringify({ desc, postSlug }),
-    });
-    mutate();
-    setDesc("");
+    try {
+      setLoading(true);
+
+      await fetch("/api/comments", {
+        method: "POST",
+        body: JSON.stringify({ desc, postSlug }),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      mutate();
+      setDesc("");
+      setLoading(false);
+    }
   };
   return (
     <div className="flex flex-col gap-10 w-full">
@@ -54,7 +62,7 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
             onClick={handleSubmit}
             className="px-3 py-2 border-white border-2"
           >
-            Send
+            {loading ? "sending" : "Send"}
           </button>
         </div>
       ) : (
@@ -71,7 +79,7 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
                 <div className="flex gap-2 items-center">
                   <Image
                     className="h-14 w-14 rounded-full"
-                    src="https://images.pexels.com/photos/15286/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=400"
+                    src={item.user.image}
                     alt="image"
                     height={1000}
                     width={1000}

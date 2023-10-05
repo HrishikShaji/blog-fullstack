@@ -22,7 +22,7 @@ const Page = async ({ params }) => {
       <div className="flex gap-2 items-center">
         <Image
           className="h-20 w-20 rounded-full object-cover"
-          src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400"
+          src={data?.user?.image}
           height={1000}
           width={1000}
           alt="image"

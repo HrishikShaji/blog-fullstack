@@ -13,6 +13,7 @@ import {
 } from "firebase/storage";
 import { app } from "@/utils/firebase";
 import Image from "next/image";
+import { loadavg } from "os";
 
 const storage = getStorage(app);
 
@@ -25,7 +26,7 @@ const Page = () => {
   const [media, setMedia] = useState("");
   const [title, setTitle] = useState("");
   const [cat, setCat] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -79,17 +80,25 @@ const Page = () => {
       .replace(/^-+|-+$/g, "");
 
   const handleSubmit = async () => {
-    const res = await fetch("/api/posts", {
-      method: "POST",
-      body: JSON.stringify({
-        title,
-        desc: value,
-        img: media,
-        slug: slugify(title),
-        catSlug: cat,
-      }),
-    });
-    console.log(res);
+    try {
+      setLoading(true);
+
+      const res = await fetch("/api/posts", {
+        method: "POST",
+        body: JSON.stringify({
+          title,
+          desc: value,
+          img: media,
+          slug: slugify(title),
+          catSlug: cat,
+        }),
+      });
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="flex flex-col gap-6 pt-40 p-10">
@@ -145,7 +154,7 @@ const Page = () => {
         onClick={handleSubmit}
         className="px-3 py-2 border-white border-2"
       >
-        Publish
+        {loading ? "uploading" : "Publish"}
       </button>
     </div>
   );
