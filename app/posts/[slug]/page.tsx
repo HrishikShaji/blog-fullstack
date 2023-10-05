@@ -18,7 +18,7 @@ const Page = async ({ params }) => {
 
   const data = await getData(slug);
   return (
-    <div className="p-10 flex flex-col gap-10">
+    <div className="pt-40 p-10 flex flex-col gap-10">
       <div className="flex gap-2 items-center">
         <Image
           className="h-20 w-20 rounded-full object-cover"
@@ -36,7 +36,7 @@ const Page = async ({ params }) => {
         <h1 className="text-3xl font-semibold">{data.title}</h1>
         <Image
           className="w-full h-full"
-          src="https://images.pexels.com/photos/18427797/pexels-photo-18427797/free-photo-of-light-sea-dawn-landscape.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+          src={data?.img}
           height={1000}
           width={1000}
           alt="image"

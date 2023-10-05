@@ -12,6 +12,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { app } from "@/utils/firebase";
+import Image from "next/image";
 
 const storage = getStorage(app);
 
@@ -34,15 +35,9 @@ const Page = () => {
 
       const uploadTask = uploadBytesResumable(storageRef, file);
 
-      // Register three observers:
-      // 1. 'state_changed' observer, called any time the state changes
-      // 2. Error observer, called on failure
-      // 3. Completion observer, called on successful completion
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // Observe state change events such as progress, pause, and resume
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
@@ -55,12 +50,8 @@ const Page = () => {
               break;
           }
         },
-        (error) => {
-          // Handle unsuccessful uploads
-        },
+        (error) => {},
         () => {
-          // Handle successful uploads on complete
-          // For instance, get the download URL: https://firebasestorage.googleapis.com/...
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setMedia(downloadURL);
           });
@@ -101,10 +92,18 @@ const Page = () => {
     console.log(res);
   };
   return (
-    <div className="flex flex-col gap-2">
-      <input placeholder="Title" onChange={(e) => setTitle(e.target.value)} />
-      <input placeholder="Category" onChange={(e) => setCat(e.target.value)} />
-      <div className="flex h-[700px] flex-col items-start">
+    <div className="flex flex-col gap-6 pt-40 p-10">
+      <input
+        className="border-b border-gray-700 bg-transparent p-2 focus:outline-none"
+        placeholder="Title"
+        onChange={(e) => setTitle(e.target.value)}
+      />
+      <input
+        className="border-b border-gray-700 bg-transparent p-2 focus:outline-none"
+        placeholder="Category"
+        onChange={(e) => setCat(e.target.value)}
+      />
+      <div className="flex gap-2">
         <button
           onClick={() => setOpen(!open)}
           className="px-3 py-2 border-2 border-white"
@@ -126,20 +125,28 @@ const Page = () => {
             <button className="px-3 py-2 border-white border-2">video</button>
           </div>
         )}
-        <ReactQuill
-          className="w-full h-full"
-          theme="bubble"
-          value={value}
-          onChange={setValue}
-          placeholder="Tell your story..."
-        />
-        <button
-          onClick={handleSubmit}
-          className="px-3 py-2 border-white border-2"
-        >
-          Publish
-        </button>
       </div>
+      {media && (
+        <Image
+          src={media}
+          height={1000}
+          width={1000}
+          alt="image"
+          className="w-full h-full object-cover"
+        />
+      )}
+      <textarea
+        className="w-full min-h-screen p-2 focus:outline-none bg-transparent"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Tell your story..."
+      />
+      <button
+        onClick={handleSubmit}
+        className="px-3 py-2 border-white border-2"
+      >
+        Publish
+      </button>
     </div>
   );
 };

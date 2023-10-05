@@ -12,7 +12,7 @@ export const Card: React.FC<CardProps> = ({ item }) => {
         height={1000}
         width={1000}
         alt="image"
-        src="https://images.pexels.com/photos/9638689/pexels-photo-9638689.jpeg?auto=compress&cs=tinysrgb&w=400"
+        src={item?.img}
         className=" h-full w-full  object-cover"
       />
       <div className="absolute z-10 flex flex-col gap-2">
