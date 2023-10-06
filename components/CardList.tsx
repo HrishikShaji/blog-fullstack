@@ -1,8 +1,9 @@
+import { Post } from "@/types/Types";
 import { Card } from "./Card";
 import { Menu } from "./Menu";
 import { Pagination } from "./Pagination";
 
-const getData = async (page, cat, sec) => {
+const getData = async (page: number, cat?: string, sec?: string) => {
   const res = await fetch(
     `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}&${sec}=true`,
     {
@@ -36,7 +37,7 @@ export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
 
       <div className="flex  gap-3">
         <div className="w-full flex flex-col gap-3">
-          {posts?.map((item) => <Card item={item} key={item.id} />)}
+          {posts?.map((item: Post) => <Card item={item} key={item.id} />)}
         </div>
       </div>
       <Pagination page={page} hasNext={hasNext} sec={sec} hasPrev={hasPrev} />

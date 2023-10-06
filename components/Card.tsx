@@ -1,8 +1,9 @@
+import { Post } from "@/types/Types";
 import Image from "next/image";
 import Link from "next/link";
 
 interface CardProps {
-  item: Record<string, any>;
+  item: Post;
 }
 
 export const Card: React.FC<CardProps> = ({ item }) => {
