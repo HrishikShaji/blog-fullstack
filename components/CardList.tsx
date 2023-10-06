@@ -30,7 +30,6 @@ export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
   const hasPrev = POST_PER_PAGE * (page - 1) > 0;
   const hasNext = POST_PER_PAGE * (page - 1) + POST_PER_PAGE < count;
 
-  console.log(sec, page, count);
   return (
     <div className="flex flex-col gap-10">
       <h1 className="text-3xl font-semibold w-full">Recent Posts</h1>

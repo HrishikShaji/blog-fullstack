@@ -93,7 +93,6 @@ const Page = () => {
           catSlug: cat,
         }),
       });
-      console.log(res);
     } catch (error) {
       console.log(error);
     } finally {

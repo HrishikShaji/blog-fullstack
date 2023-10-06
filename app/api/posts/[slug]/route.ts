@@ -11,7 +11,6 @@ export const GET = async (req: Request, { params }) => {
       },
       include: { user: true },
     });
-    console.log(post);
     return new NextResponse(JSON.stringify(post, { status: 200 }));
   } catch (err) {
     return new NextResponse(

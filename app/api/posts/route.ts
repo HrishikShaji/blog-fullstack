@@ -21,14 +21,11 @@ export const GET = async (req: Request) => {
       ...(popular ? { views: "desc" } : { createdAt: "desc" }),
     },
   };
-  console.log("its here", page);
-  console.log(featured);
   try {
     const [posts, count] = await prisma.$transaction([
       prisma.post.findMany(query),
       prisma.post.count({ where: query.where }),
     ]);
-    console.log(posts);
 
     return new NextResponse(JSON.stringify({ posts, count }, { status: 200 }));
   } catch (err) {

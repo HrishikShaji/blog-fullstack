@@ -7,7 +7,6 @@ import { PopularPosts } from "@/components/PopularPosts";
 
 export default function Home({ searchParams }) {
   const page = parseInt(searchParams.page) || 1;
-  console.log(page);
   return (
     <main className="pt-40 p-10 flex flex-col gap-5">
       <Featured />

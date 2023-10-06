@@ -1,11 +1,10 @@
-
+import { CardList } from "@/components/CardList";
 import { Menu } from "@/components/Menu";
 
 const Page = ({ searchParams }) => {
   const page = parseInt(searchParams.page) || 1;
   const { cat } = searchParams;
   const { sec } = searchParams;
-  console.log("here it is", sec);
 
   return (
     <div>
