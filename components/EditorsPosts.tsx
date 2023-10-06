@@ -1,7 +1,8 @@
+import { Post } from "@/types/Types";
 import Image from "next/image";
 import Link from "next/link";
 
-const getData = async (page, sec) => {
+const getData = async (page: number, sec: string) => {
   const res = await fetch(
     `http://localhost:3000/api/posts?page=${page}&${sec}=true`,
     {
@@ -23,7 +24,7 @@ export const EditorsPosts = async () => {
     <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-semibold">Editors Picks</h1>
       <div className="flex gap-5 items-center justify-between">
-        {data?.posts.map((item) => (
+        {data?.posts.map((item: Post) => (
           <div key={item.id} className="flex gap-4">
             <div className="flex relative h-[150px] w-[250px]">
               <Image

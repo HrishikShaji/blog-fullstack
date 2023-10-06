@@ -1,10 +1,12 @@
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+
 // User.ts
 export type User = {
   id: string;
   name: string | null;
   email: string;
   emailVerified: Date | null;
-  image: string | null;
+  image: string | StaticImport;
   Post: Post[];
   Comment: Comment[];
 };
@@ -32,10 +34,11 @@ export type Post = {
   slug: string;
   title: string;
   desc: string;
-  img: string | null;
+  img: string | StaticImport;
   views: number;
   catSlug: string;
   userEmail: string;
+  user: User;
   comments?: Comment[];
   featured: boolean;
 };

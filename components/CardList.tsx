@@ -1,6 +1,5 @@
 import { Post } from "@/types/Types";
 import { Card } from "./Card";
-import { Menu } from "./Menu";
 import { Pagination } from "./Pagination";
 
 const getData = async (page: number, cat?: string, sec?: string) => {

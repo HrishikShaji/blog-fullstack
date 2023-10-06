@@ -5,12 +5,13 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useState } from "react";
+import { Post } from "@/types/Types";
 
 interface CommentsProps {
   postSlug: string;
 }
 
-const fetcher = async (url) => {
+const fetcher = async (url: string) => {
   const res = await fetch(url);
 
   const data = await res.json();
@@ -71,7 +72,7 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
       <div className="flex flex-col gap-6 ">
         {isLoading
           ? "Loading"
-          : data?.map((item) => (
+          : data?.map((item: Post) => (
               <div
                 className="flex flex-col gap-2 border-b border-gray-700 pb-5"
                 key={item.id}
