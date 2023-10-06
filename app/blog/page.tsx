@@ -1,4 +1,4 @@
-import { CardList } from "@/components/CardList";
+
 import { Menu } from "@/components/Menu";
 
 const Page = ({ searchParams }) => {

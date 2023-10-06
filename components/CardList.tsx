@@ -25,12 +25,12 @@ interface CardListProps {
 
 export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
   const { posts, count } = await getData(page, cat, sec);
-
   const POST_PER_PAGE = 2;
 
   const hasPrev = POST_PER_PAGE * (page - 1) > 0;
   const hasNext = POST_PER_PAGE * (page - 1) + POST_PER_PAGE < count;
 
+  console.log(sec, page, count);
   return (
     <div className="flex flex-col gap-10">
       <h1 className="text-3xl font-semibold w-full">Recent Posts</h1>
@@ -40,7 +40,7 @@ export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
           {posts?.map((item) => <Card item={item} key={item.id} />)}
         </div>
       </div>
-      <Pagination page={page} hasNext={hasNext} hasPrev={hasPrev} />
+      <Pagination page={page} hasNext={hasNext} sec={sec} hasPrev={hasPrev} />
     </div>
   );
 };
