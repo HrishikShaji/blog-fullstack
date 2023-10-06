@@ -2,9 +2,9 @@ import { Card } from "./Card";
 import { Menu } from "./Menu";
 import { Pagination } from "./Pagination";
 
-const getData = async (page, cat) => {
+const getData = async (page, cat, sec) => {
   const res = await fetch(
-    `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}`,
+    `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}&${sec}=true`,
     {
       cache: "no-store",
     },
@@ -20,10 +20,11 @@ const getData = async (page, cat) => {
 interface CardListProps {
   page: number;
   cat?: string;
+  sec?: string;
 }
 
-export const CardList: React.FC<CardListProps> = async ({ page, cat }) => {
-  const { posts, count } = await getData(page, cat);
+export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
+  const { posts, count } = await getData(page, cat, sec);
 
   const POST_PER_PAGE = 2;
 

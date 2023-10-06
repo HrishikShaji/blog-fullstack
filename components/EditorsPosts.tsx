@@ -20,7 +20,7 @@ export const EditorsPosts = () => {
               <div className="flex gap-2">
                 <span>name</span>
               </div>
-              <Link href="/">See more</Link>
+              <Link href="/blog?sec=Editor">See more</Link>
             </div>
           </div>
           <div className="flex relative h-[150px] w-[250px]">
@@ -35,11 +35,13 @@ export const EditorsPosts = () => {
               <div className="flex gap-2">
                 <span>name</span>
               </div>
-              <Link href="/">See more</Link>
+              <Link href="/blog?cat=Editor">See more</Link>
             </div>
           </div>
         </div>
-        <button className="px-3 py-2 border-2 border-white">See More</button>
+        <button className="px-3 py-2 border-2 border-white">
+          <Link href="/blog?sec=editor">See more</Link>
+        </button>
       </div>
     </div>
   );

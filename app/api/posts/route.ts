@@ -7,22 +7,26 @@ export const GET = async (req: Request) => {
 
   const page = searchParams.get("page");
   const cat = searchParams.get("cat");
+  const featured = searchParams.get("editor");
+  const popular = searchParams.get("popular");
   const POST_PER_PAGE = 2;
-
   const query = {
     take: POST_PER_PAGE,
     skip: POST_PER_PAGE * (page - 1),
     where: {
       ...(cat && { catSlug: cat }),
+      ...(featured && { featured: true }),
     },
   };
   console.log("its here", page);
+  console.log(featured);
   try {
     const [posts, count] = await prisma.$transaction([
       prisma.post.findMany(query),
       prisma.post.count({ where: query.where }),
     ]);
     console.log(posts);
+
     return new NextResponse(JSON.stringify({ posts, count }, { status: 200 }));
   } catch (err) {
     return new NextResponse(
