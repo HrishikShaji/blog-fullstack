@@ -17,6 +17,9 @@ export const GET = async (req: Request) => {
       ...(cat && { catSlug: cat }),
       ...(featured && { featured: true }),
     },
+    orderBy: {
+      ...(popular ? { views: "desc" } : { createdAt: "desc" }),
+    },
   };
   console.log("its here", page);
   console.log(featured);

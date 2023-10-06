@@ -38,7 +38,9 @@ export const PopularPosts = () => {
             </div>
           </div>
         </div>
-        <button className="px-3 py-2 border-2 border-white">See More</button>
+        <button className="px-3 py-2 border-2 border-white">
+          <Link href="/blog?sec=popular">See more</Link>
+        </button>
       </div>
     </div>
   );
