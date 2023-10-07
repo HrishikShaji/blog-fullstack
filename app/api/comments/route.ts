@@ -9,9 +9,14 @@ export const GET = async (req: Request) => {
     const comments = await prisma.comment.findMany({
       where: {
         ...(postSlug && { postSlug }),
+        AND: {
+          parentId: "original",
+        },
       },
+
       include: { user: true },
     });
+    console.log("comments are", comments);
     return new NextResponse(JSON.stringify(comments));
   } catch (err) {
     return new NextResponse(

@@ -32,14 +32,15 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
   );
 
   const [desc, setDesc] = useState("");
+  const [reply, setReply] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (desc: string, parentId?: string) => {
     try {
       setLoading(true);
 
       await fetch("/api/comments", {
         method: "POST",
-        body: JSON.stringify({ desc, postSlug }),
+        body: JSON.stringify({ desc, postSlug, parentId }),
       });
     } catch (error) {
       console.log(error);
@@ -49,6 +50,7 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex flex-col gap-10 w-full">
       <h1>Comments</h1>
@@ -60,7 +62,7 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
             value={desc}
           />
           <button
-            onClick={handleSubmit}
+            onClick={() => handleSubmit(desc)}
             className="px-3 py-2 border-white border-2"
           >
             {loading ? "sending" : "Send"}
@@ -92,6 +94,17 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
                 </div>
                 <div>
                   <p>{item.desc}</p>
+                </div>
+                <div>
+                  <form className="">
+                    <input
+                      value={reply}
+                      onChange={(e) => setReply(e.target.value)}
+                    />
+                    <button onClick={() => handleSubmit(reply, item.id)}>
+                      Reply
+                    </button>
+                  </form>
                 </div>
               </div>
             ))}
