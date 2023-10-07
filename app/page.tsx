@@ -2,10 +2,13 @@ import { CardList } from "@/components/CardList";
 import { CategoryList } from "@/components/CategoryList";
 import { EditorsPosts } from "@/components/EditorsPosts";
 import { Featured } from "@/components/Featured";
-import { Menu } from "@/components/Menu";
 import { PopularPosts } from "@/components/PopularPosts";
 
-export default function Home({ searchParams }) {
+type SearchParams = {
+  page: string;
+};
+
+export default function Home({ searchParams }: { searchParams: SearchParams }) {
   const page = parseInt(searchParams.page) || 1;
   return (
     <main className="pt-40 p-10 flex flex-col gap-5">

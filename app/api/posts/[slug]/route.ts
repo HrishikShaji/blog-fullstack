@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/connect";
 
-export const GET = async (req: Request, { params }) => {
+type Params = {
+  params: {
+    slug: string;
+  };
+};
+
+export const GET = async (req: Request, { params }: Params) => {
   const { slug } = params;
   try {
     const post = await prisma.post.update({
@@ -11,10 +17,10 @@ export const GET = async (req: Request, { params }) => {
       },
       include: { user: true },
     });
-    return new NextResponse(JSON.stringify(post, { status: 200 }));
+    return new NextResponse(JSON.stringify(post));
   } catch (err) {
     return new NextResponse(
-      JSON.stringify({ message: "Something went wrong" }, { status: 500 }),
+      JSON.stringify({ message: "Something went wrong" }),
     );
   }
 };

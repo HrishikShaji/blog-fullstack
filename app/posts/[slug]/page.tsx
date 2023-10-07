@@ -1,8 +1,7 @@
 import { Comments } from "@/components/Comments";
-import { Menu } from "@/components/Menu";
 import Image from "next/image";
 
-const getData = async (slug) => {
+const getData = async (slug: string) => {
   const res = await fetch(`http://localhost:3000/api/posts/${slug}`, {
     cache: "no-store",
   });
@@ -13,7 +12,7 @@ const getData = async (slug) => {
 
   return res.json();
 };
-const Page = async ({ params }) => {
+const Page = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
 
   const data = await getData(slug);

@@ -5,7 +5,7 @@ import { getAuthSession } from "@/utils/auth";
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
 
-  const page = searchParams.get("page");
+  const page = Number(searchParams.get("page"));
   const cat = searchParams.get("cat");
   const featured = searchParams.get("editor");
   const popular = searchParams.get("popular");
@@ -23,14 +23,14 @@ export const GET = async (req: Request) => {
   };
   try {
     const [posts, count] = await prisma.$transaction([
-      prisma.post.findMany(query),
+      prisma.post.findMany(query as any),
       prisma.post.count({ where: query.where }),
     ]);
 
-    return new NextResponse(JSON.stringify({ posts, count }, { status: 200 }));
+    return new NextResponse(JSON.stringify({ posts, count }));
   } catch (err) {
     return new NextResponse(
-      JSON.stringify({ message: "Something went wrong" }, { status: 500 }),
+      JSON.stringify({ message: "Something went wrong" }),
     );
   }
 };
@@ -39,23 +39,19 @@ export const POST = async (req: Request) => {
   const session = await getAuthSession();
 
   if (!session) {
-    return new NextResponse(
-      JSON.stringify({ message: "Not authenticated" }, { status: 401 }),
-    );
+    return new NextResponse(JSON.stringify({ message: "Not authenticated" }));
   }
 
-  const { searchParams } = new URL(req.url);
-  const postSlug = searchParams.get("postSlug");
   try {
     const body = await req.json();
 
     const post = await prisma.post.create({
-      data: { ...body, userEmail: session?.user.email },
+      data: { ...body, userEmail: session?.user?.email },
     });
-    return new NextResponse(JSON.stringify(post, { status: 200 }));
+    return new NextResponse(JSON.stringify(post));
   } catch (err) {
     return new NextResponse(
-      JSON.stringify({ message: "Something went wrong" }, { status: 500 }),
+      JSON.stringify({ message: "Something went wrong" }),
     );
   }
 };

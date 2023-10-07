@@ -2,9 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { cache, useEffect, useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.bubble.css";
+import { useEffect, useState } from "react";
 import {
   getStorage,
   ref,
@@ -13,7 +11,6 @@ import {
 } from "firebase/storage";
 import { app } from "@/utils/firebase";
 import Image from "next/image";
-import { loadavg } from "os";
 
 const storage = getStorage(app);
 
@@ -21,8 +18,8 @@ const Page = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
-  const [file, setFile] = useState(null);
-  const { data, status } = useSession();
+  const [file, setFile] = useState<File | null>(null);
+  const { status } = useSession();
   const [media, setMedia] = useState("");
   const [title, setTitle] = useState("");
   const [cat, setCat] = useState("");
@@ -31,6 +28,7 @@ const Page = () => {
 
   useEffect(() => {
     const upload = () => {
+      if (!file) return null;
       const name = new Date().getTime + file.name;
       const storageRef = ref(storage, name);
 
@@ -51,7 +49,9 @@ const Page = () => {
               break;
           }
         },
-        (error) => {},
+        (error) => {
+          console.log(error);
+        },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setMedia(downloadURL);
@@ -71,7 +71,7 @@ const Page = () => {
     router.push("/");
   }
 
-  const slugify = (str) =>
+  const slugify = (str: string) =>
     str
       .toLowerCase()
       .trim()
@@ -83,7 +83,7 @@ const Page = () => {
     try {
       setLoading(true);
 
-      const res = await fetch("/api/posts", {
+      await fetch("/api/posts", {
         method: "POST",
         body: JSON.stringify({
           title,
@@ -123,7 +123,10 @@ const Page = () => {
             <input
               type="file"
               id="image"
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                const selectedFile = e.target.files?.[0] || null;
+                setFile(selectedFile);
+              }}
               style={{ display: "none" }}
             />
             <button className="px-3 py-2 border-white border-2">
