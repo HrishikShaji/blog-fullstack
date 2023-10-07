@@ -12,10 +12,29 @@ export const POST = async (req: Request) => {
   try {
     const body = await req.json();
 
-    const comment = await prisma.comment.create({
+    console.log("body is", body);
+    const reply = await prisma.comment.create({
       data: { ...body, userEmail: session?.user?.email },
     });
-    return new NextResponse(JSON.stringify(comment));
+
+    const originalComment = await prisma.comment.findUnique({
+      where: {
+        id: body.parentId,
+      },
+    });
+    await prisma.comment.update({
+      where: {
+        id: body.parentId,
+      },
+      data: {
+        children: {
+          push: reply.id,
+        },
+      },
+    });
+    console.log("original is", originalComment);
+
+    return new NextResponse(JSON.stringify(reply));
   } catch (err) {
     return new NextResponse(
       JSON.stringify({ message: "Something went wrong" }),

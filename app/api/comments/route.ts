@@ -16,7 +16,6 @@ export const GET = async (req: Request) => {
 
       include: { user: true },
     });
-    console.log("comments are", comments);
     return new NextResponse(JSON.stringify(comments));
   } catch (err) {
     return new NextResponse(

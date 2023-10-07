@@ -14,7 +14,6 @@ const getData = async (page: number) => {
 
 export const Featured = async () => {
   const data = await getData(1);
-  console.log(data);
   return (
     <div className="flex flex-col gap-10">
       <h1 className="text-4xl">Discover my Stories and creative ideas</h1>

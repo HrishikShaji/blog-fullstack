@@ -34,11 +34,28 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
   const [desc, setDesc] = useState("");
   const [reply, setReply] = useState("");
 
-  const handleSubmit = async (desc: string, parentId?: string) => {
+  const handleSubmit = async (desc: string) => {
     try {
       setLoading(true);
 
       await fetch("/api/comments", {
+        method: "POST",
+        body: JSON.stringify({ desc, postSlug }),
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      mutate();
+      setDesc("");
+      setLoading(false);
+    }
+  };
+
+  const handleReply = async (desc: string, parentId: string) => {
+    try {
+      setLoading(true);
+
+      await fetch("/api/replies", {
         method: "POST",
         body: JSON.stringify({ desc, postSlug, parentId }),
       });
@@ -50,7 +67,6 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
       setLoading(false);
     }
   };
-
   return (
     <div className="flex flex-col gap-10 w-full">
       <h1>Comments</h1>
@@ -101,7 +117,7 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
                       value={reply}
                       onChange={(e) => setReply(e.target.value)}
                     />
-                    <button onClick={() => handleSubmit(reply, item.id)}>
+                    <button onClick={() => handleReply(reply, item.id)}>
                       Reply
                     </button>
                   </form>
