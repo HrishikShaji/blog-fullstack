@@ -41,3 +41,28 @@ export const POST = async (req: Request) => {
     );
   }
 };
+
+export const GET = async (req: Request) => {
+  const session = await getAuthSession();
+
+  if (!session) {
+    return new NextResponse(JSON.stringify({ message: "Not authenticated" }));
+  }
+
+  try {
+    const { searchParams } = new URL(req.url);
+    const parentId = searchParams.get("parentId");
+
+    const replies = await prisma.comment.findMany({
+      where: {
+        parentId: parentId,
+      },
+    });
+
+    return new NextResponse(JSON.stringify(replies));
+  } catch (err) {
+    return new NextResponse(
+      JSON.stringify({ message: "Something went wrong" }),
+    );
+  }
+};

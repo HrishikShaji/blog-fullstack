@@ -33,7 +33,9 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
 
   const [desc, setDesc] = useState("");
   const [reply, setReply] = useState("");
-
+  const [replyForm, setReplyForm] = useState(false);
+  const [replies, setReplies] = useState(false);
+  const [replyData, setReplyData] = useState(null);
   const handleSubmit = async (desc: string) => {
     try {
       setLoading(true);
@@ -67,6 +69,17 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
       setLoading(false);
     }
   };
+
+  const fetchReplies = async (parentId: string) => {
+    setReplies(!replies);
+
+    const data = await fetch(`/api/replies?parentId=${parentId}`, {
+      method: "GET",
+    });
+    const res = await data.json();
+    setReplyData(res);
+  };
+
   return (
     <div className="flex flex-col gap-10 w-full">
       <h1>Comments</h1>
@@ -111,16 +124,41 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
                 <div>
                   <p>{item.desc}</p>
                 </div>
-                <div>
-                  <form className="">
-                    <input
-                      value={reply}
-                      onChange={(e) => setReply(e.target.value)}
-                    />
-                    <button onClick={() => handleReply(reply, item.id)}>
+                <div className="flex flex-col gap-4">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setReplyForm(!replyForm)}
+                      className="px-3 py-2 border-2 border-white"
+                    >
                       Reply
                     </button>
-                  </form>
+                    <button
+                      onClick={() => fetchReplies(item.id)}
+                      className="px-3 py-2 border-2 border-white"
+                    >
+                      Replies
+                    </button>
+                  </div>
+                  {replyForm && (
+                    <form className="">
+                      <input
+                        value={reply}
+                        onChange={(e) => setReply(e.target.value)}
+                      />
+                      <button onClick={() => handleReply(reply, item.id)}>
+                        Reply
+                      </button>
+                    </form>
+                  )}
+                  {replies && (
+                    <div>
+                      {replyData?.map((item) => (
+                        <div key={item.id}>
+                          <h1>{item.desc}</h1>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
