@@ -19,7 +19,6 @@ const getData = async (page: number, sec: string) => {
 
 export const EditorsPosts = async () => {
   const data = await getData(1, "editor");
-  console.log(data);
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-semibold">Editors Picks</h1>

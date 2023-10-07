@@ -1,7 +1,12 @@
 import { CardList } from "@/components/CardList";
-import { Menu } from "@/components/Menu";
 
-const Page = ({ searchParams }) => {
+type SearchParams = {
+  cat: string;
+  sec: string;
+  page: string;
+};
+
+const Page = ({ searchParams }: { searchParams: SearchParams }) => {
   const page = parseInt(searchParams.page) || 1;
   const { cat } = searchParams;
   const { sec } = searchParams;

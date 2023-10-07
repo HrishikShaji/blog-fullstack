@@ -7,6 +7,7 @@ interface PaginationProps {
   hasPrev: boolean;
   hasNext: boolean;
   sec?: string;
+  cat?: string;
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
@@ -14,6 +15,7 @@ export const Pagination: React.FC<PaginationProps> = ({
   hasPrev,
   hasNext,
   sec,
+  cat,
 }) => {
   const router = useRouter();
   return (
@@ -22,7 +24,11 @@ export const Pagination: React.FC<PaginationProps> = ({
         className="bg-neutral-600 disabled:bg-neutral-300 px-3 py-2 cursor-pointer"
         onClick={() =>
           router.push(
-            sec ? `?sec=${sec}&page=${page - 1}` : `?page=${page - 1}`,
+            sec
+              ? `?sec=${sec}&page=${page - 1}`
+              : cat
+              ? `?cat=${cat}&page=${page - 1}`
+              : `?page=${page - 1}`,
           )
         }
         disabled={!hasPrev}
@@ -33,7 +39,11 @@ export const Pagination: React.FC<PaginationProps> = ({
         className="bg-neutral-600 px-3 py-2 cursor-pointer disabled:bg-neutral-300"
         onClick={() =>
           router.push(
-            sec ? `?sec=${sec}&page=${page + 1}` : `?page=${page + 1}`,
+            sec
+              ? `?sec=${sec}&page=${page + 1}`
+              : cat
+              ? `?cat=${cat}&page=${page + 1}`
+              : `?page=${page + 1}`,
           )
         }
         disabled={!hasNext}

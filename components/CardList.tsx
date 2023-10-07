@@ -39,7 +39,13 @@ export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
           {posts?.map((item: Post) => <Card item={item} key={item.id} />)}
         </div>
       </div>
-      <Pagination page={page} hasNext={hasNext} sec={sec} hasPrev={hasPrev} />
+      <Pagination
+        cat={cat}
+        page={page}
+        hasNext={hasNext}
+        sec={sec}
+        hasPrev={hasPrev}
+      />
     </div>
   );
 };
