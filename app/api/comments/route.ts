@@ -16,6 +16,7 @@ const createComments = (comments: any, parentId: string | null = null): any => {
     commentList.push({
       id: comm.id,
       desc: comm.desc,
+      user: comm.user,
       children: createComments(comments, comm.id),
     });
   }

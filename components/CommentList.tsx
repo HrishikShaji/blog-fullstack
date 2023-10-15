@@ -9,19 +9,21 @@ export const CommentList: React.FC<CommentListProps> = ({
   comments,
   postSlug,
 }) => {
-  console.log(comments);
   return (
     <div>
-      {comments.map((comment) => (
-        <div key={comment.id}>
-          <Comment item={comment} postSlug={postSlug} />
-          {comments.children.length > 0 && (
-            <div className="ml-10">
-              <CommentList comments={comment.children} postSlug={postSlug} />
-            </div>
-          )}
-        </div>
-      ))}
+      {comments.map((comment) => {
+        console.log(comment);
+        return (
+          <div key={comment.id}>
+            <Comment item={comment} postSlug={postSlug} />
+            {comment.children && comment.children.length > 0 && (
+              <div className="ml-10">
+                <CommentList comments={comment.children} postSlug={postSlug} />
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 };
