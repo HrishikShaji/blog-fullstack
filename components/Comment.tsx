@@ -4,7 +4,7 @@ import { useState } from "react";
 
 interface CommentProps {
   item: Post;
-  postSlug: string;
+  postSlug: string | null;
 }
 
 export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
@@ -60,37 +60,10 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
       <div>
         <p>{item.desc}</p>
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="flex gap-2">
-          <button
-            onClick={() => setReplyForm(!replyForm)}
-            className="px-3 py-2 border-2 border-white"
-          >
-            Reply
-          </button>
-          <button
-            onClick={() => fetchReplies(item.id)}
-            className="px-3 py-2 border-2 border-white"
-          >
-            Replies
-          </button>
-        </div>
-        {replyForm && (
-          <form className="">
-            <input value={reply} onChange={(e) => setReply(e.target.value)} />
-            <button onClick={() => handleReply(reply, item.id)}>Reply</button>
-          </form>
-        )}
-        {replies && (
-          <div>
-            {replyData?.map((item) => (
-              <div key={item.id}>
-                <h1>{item.desc}</h1>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      <form className="">
+        <input value={reply} onChange={(e) => setReply(e.target.value)} />
+        <button onClick={() => handleReply(reply, item.id)}>Reply</button>
+      </form>
     </div>
   );
 };

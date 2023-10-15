@@ -6,9 +6,12 @@ import useSWR from "swr";
 import { useState } from "react";
 import { Post } from "@/types/Types";
 import { Comment } from "./Comment";
+import { CommentList } from "./CommentList";
 
 interface CommentsProps {
-  postSlug: string;
+  postSlug?: string;
+  isReply?: boolean;
+  parentId?: string;
 }
 
 const fetcher = async (url: string) => {
@@ -23,9 +26,14 @@ const fetcher = async (url: string) => {
   return data;
 };
 
-export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
+export const Comments: React.FC<CommentsProps> = ({
+  postSlug,
+  isReply,
+  parentId,
+}) => {
   const { status } = useSession();
   const [loading, setLoading] = useState(false);
+
   const { data, isLoading, mutate } = useSWR(
     `http://localhost:3000/api/comments?postSlug=${postSlug}`,
     fetcher,
@@ -70,11 +78,11 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
         <Link href="/login">Login to write a comment</Link>
       )}
       <div className="flex flex-col gap-6 ">
-        {isLoading
-          ? "Loading"
-          : data?.map((item: Post) => (
-              <Comment key={item.id} item={item} postSlug={postSlug} />
-            ))}
+        {isLoading ? (
+          "Loading"
+        ) : (
+          <CommentList comments={data} postSlug={postSlug} />
+        )}
       </div>
     </div>
   );
