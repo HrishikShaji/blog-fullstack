@@ -18,7 +18,7 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
     try {
       setLoading(true);
 
-      await fetch("/api/replies", {
+      await fetch("/api/comments", {
         method: "POST",
         body: JSON.stringify({ desc, postSlug, parentId }),
       });
@@ -30,21 +30,12 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
     }
   };
 
-  const fetchReplies = async (parentId: string) => {
-    setReplies(!replies);
-
-    const data = await fetch(`/api/replies?parentId=${parentId}`, {
-      method: "GET",
-    });
-    const res = await data.json();
-    setReplyData(res);
-  };
   return (
     <div
-      className="flex flex-col gap-2 border-b border-gray-700 pb-5"
+      className="flex flex-col gap-6 border-b border-gray-700 pt-2 pb-5"
       key={item.id}
     >
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-start">
         <Image
           className="h-14 w-14 rounded-full"
           src={item.user.image}
@@ -52,18 +43,39 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
           height={1000}
           width={1000}
         />
-        <div className="flex flex-col ">
-          <span className="">{item.user.email}</span>
-          <span className="text-sm text-gray-400">10.3.2023</span>
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-2 items-center">
+            <span className="font-semibold">{item.user.email}</span>
+            <span className="text-xs text-gray-400">10.3.2023</span>
+          </div>
+          <div>
+            <p>{item.desc}</p>
+          </div>
         </div>
       </div>
-      <div>
-        <p>{item.desc}</p>
+      <div className="flex gap-2">
+        <button
+          onClick={() => setReplies(!replies)}
+          className="py-2 px-3 border-2 border-white"
+        >
+          Reply
+        </button>
       </div>
-      <form className="">
-        <input value={reply} onChange={(e) => setReply(e.target.value)} />
-        <button onClick={() => handleReply(reply, item.id)}>Reply</button>
-      </form>
+      {replies && (
+        <form className="w-full flex gap-2">
+          <input
+            className="w-full bg-transparent border-b-2 border-white"
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
+          />
+          <button
+            className="py-2 px-3 border-2 border-white"
+            onClick={() => handleReply(reply, item.id)}
+          >
+            Reply
+          </button>
+        </form>
+      )}
     </div>
   );
 };
