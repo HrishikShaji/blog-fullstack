@@ -51,15 +51,15 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
           <div>
             <p>{item.desc}</p>
           </div>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setReplies(!replies)}
+              className="py-2 px-3 border-2 border-white"
+            >
+              Reply
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="flex gap-2">
-        <button
-          onClick={() => setReplies(!replies)}
-          className="py-2 px-3 border-2 border-white"
-        >
-          Reply
-        </button>
       </div>
       {replies && (
         <form className="w-full flex gap-2">
