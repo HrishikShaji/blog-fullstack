@@ -1,9 +1,10 @@
 import { Post } from "@/types/Types";
 import Image from "next/image";
 import Link from "next/link";
+import { EditorOutput } from "./EditorOutput";
 
 interface CardProps {
-  item: Post;
+  item: any;
 }
 
 export const Card: React.FC<CardProps> = ({ item }) => {
@@ -14,6 +15,7 @@ export const Card: React.FC<CardProps> = ({ item }) => {
           <span>{item.createdAt.toString().substring(0, 10)}</span>
         </div>
         <h1 className="text-xl font-bold">{item.title}</h1>
+        <EditorOutput content={item.content} />
         <Link href={`/posts/${item.slug}`}>See more</Link>
       </div>
     </div>

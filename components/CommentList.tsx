@@ -25,7 +25,6 @@ export const CommentList: React.FC<CommentListProps> = ({
   return (
     <div className="w-full overflow-x-hidden">
       {comments.map((comment, index: number) => {
-        console.log(comment);
         return (
           <div
             key={comment.id}
