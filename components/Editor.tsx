@@ -3,7 +3,7 @@
 import { uploadFiles } from "@/utils/uploadthing";
 import EditorJS from "@editorjs/editorjs";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 export const Editor = () => {
@@ -47,13 +47,17 @@ export const Editor = () => {
             config: {
               uploader: {
                 async uploadByFile(file: File) {
-                  console.log(file);
-                  const res = await uploadFiles([file], "imageUploader");
-                  console.log(res[0]);
+                  if (!file) {
+                    return { success: 0, file: { url: null } };
+                  }
+                  const res = await uploadFiles({
+                    files: [file],
+                    endpoint: "imageUploader",
+                  });
                   return {
                     success: 1,
                     file: {
-                      url: res[0].fileUrl,
+                      url: res[0].url,
                     },
                   };
                 },
@@ -90,21 +94,12 @@ export const Editor = () => {
         ref.current = null;
       }
     };
-  }, [isMounted]);
+  }, [isMounted, initializedEditor]);
 
-  const titleChange = (e) => {
-    console.log(e.target.value);
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
     const blocks = await ref.current?.save();
-
-    const payload = {
-      title: data.title,
-      content: blocks,
-    };
-
-    console.log(payload);
+    console.log(blocks);
   };
 
   if (!isMounted) {
@@ -113,20 +108,17 @@ export const Editor = () => {
 
   return (
     <div className="w-full p-4 bg-zinc-50 rounded-lg border border-zinc-200 text-black">
-      <form
-        id="subreddit-post-form"
-        className="w-fit"
-        onSubmit={(e) => handleSubmit(e)}
-      >
+      <form id="subreddit-post-form" className="w-fit" onSubmit={handleSubmit}>
         <div className="prose prose-stone dark:prose-invert">
           <textarea
-            ref={titleRef}
-            onChange={titleChange}
             placeholder="title"
             className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
           />
           <div id="editor" className="min-h-[500px]"></div>
         </div>
+        <button className="text-white bg-black py-1 px-2 rounded-md">
+          POST
+        </button>
       </form>
     </div>
   );
