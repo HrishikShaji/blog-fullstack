@@ -2,9 +2,9 @@
 
 import { uploadFiles } from "@/utils/uploadthing";
 import EditorJS from "@editorjs/editorjs";
+import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
-import TextareaAutosize from "react-textarea-autosize";
 
 export const Editor = () => {
   const ref = useRef<EditorJS | null>();
@@ -13,6 +13,8 @@ export const Editor = () => {
   const _titleRef = useRef<HTMLTextAreaElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const [title, setTitle] = useState("");
+  const [cat, setCat] = useState("");
 
   const initializedEditor = useCallback(async () => {
     const EditorJS = (await import("@editorjs/editorjs")).default;
@@ -96,10 +98,30 @@ export const Editor = () => {
     };
   }, [isMounted, initializedEditor]);
 
+  const slugify = (str: string) =>
+    str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const blocks = await ref.current?.save();
     console.log(blocks);
+    const payload = {
+      title: title,
+      content: blocks,
+      slug: slugify(title),
+      cat: cat,
+    };
+
+    try {
+      await axios.post("api/create", payload);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (!isMounted) {
@@ -111,8 +133,16 @@ export const Editor = () => {
       <form id="subreddit-post-form" className="w-fit" onSubmit={handleSubmit}>
         <div className="prose prose-stone dark:prose-invert">
           <textarea
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             placeholder="title"
             className="w-full resize-none appearance-none overflow-hidden bg-transparent text-5xl font-bold focus:outline-none"
+          />
+          <input
+            value={cat}
+            onChange={(e) => setCat(e.target.value)}
+            placeholder="Category"
+            className="w-full resize-none appearance-none overflow-hidden bg-transparent text-2xl font-bold focus:outline-none"
           />
           <div id="editor" className="min-h-[500px]"></div>
         </div>
