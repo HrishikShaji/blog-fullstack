@@ -11,6 +11,7 @@ export const AuthLinks = () => {
       ) : (
         <>
           <Link href="/write">Write</Link>
+          <Link href="/create">Create</Link>
           <button onClick={() => signOut()}>Logout</button>
         </>
       )}
