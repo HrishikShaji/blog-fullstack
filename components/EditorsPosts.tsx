@@ -25,14 +25,7 @@ export const EditorsPosts = async () => {
       <div className="flex gap-5 items-center justify-between">
         {data?.posts.map((item: Post) => (
           <div key={item.id} className="flex gap-4">
-            <div className="flex relative h-[150px] w-[250px]">
-              <Image
-                height={1000}
-                width={1000}
-                alt="image"
-                src={item.img}
-                className=" h-full w-full absolute object-cover"
-              />
+            <div className="flex bg-gray-800 relative h-[150px] w-[250px]">
               <div className="absolute z-10 flex flex-col gap-2">
                 <div className="flex gap-2">
                   <span>name</span>
