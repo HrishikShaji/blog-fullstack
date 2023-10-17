@@ -74,6 +74,7 @@ slug String @unique
 title String
 desc String
 img String?
+content Json?
 views Int @default(0)
 catSlug String
 cat Category @relation(fields: [catSlug],references: [slug])
