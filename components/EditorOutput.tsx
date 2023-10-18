@@ -48,8 +48,13 @@ function CustomCodeRenderer({ data }: any) {
 function CustonImageRenderer({ data }: any) {
   const src = data.file.url;
   return (
-    <div className="relative w-full min-h-[15rem]">
-      <Image alt="image" className="object-contain" fill src={src} />
+    <div className=" h-[50vw] w-[50vw] relative">
+      <Image
+        alt="image"
+        className="object-cover h-[50vw] w-[50vw]"
+        fill
+        src={src}
+      />
     </div>
   );
 }

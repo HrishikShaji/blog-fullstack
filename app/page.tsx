@@ -12,6 +12,7 @@ export default function Home({ searchParams }: { searchParams: SearchParams }) {
   const page = parseInt(searchParams.page) || 1;
   return (
     <main className="pt-40 p-10 flex flex-col gap-5">
+      <PopularPosts />
       <CategoryList />
       <div>
         <CardList page={page} />

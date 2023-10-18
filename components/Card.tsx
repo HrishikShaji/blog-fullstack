@@ -9,7 +9,6 @@ interface CardProps {
 export const Card: React.FC<CardProps> = ({ item }) => {
   const data = JSON.parse(item.content);
   const images = data.blocks.filter((block: any) => block.type == "image");
-  console.log(item);
 
   return (
     <div className="flex relative h-[300px] w-full bg-gray-500 justify-center items-center overflow-hidden">

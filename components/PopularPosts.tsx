@@ -19,22 +19,38 @@ const getData = async (page: number, sec: string) => {
 
 export const PopularPosts = async () => {
   const data = await getData(1, "popular");
+  console.log(data.posts);
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-semibold">Popular Posts</h1>
       <div className="flex gap-5 items-center justify-between">
-        {data?.posts.map((item: Post) => (
-          <div key={item.id} className="flex gap-4">
-            <div className="flex relative bg-gray-300 h-[150px] w-[250px]">
-              <div className="absolute z-10 flex flex-col gap-2">
-                <div className="flex gap-2">
-                  <span>name</span>
-                </div>
-                <Link href="/">See more</Link>
-              </div>
+        {data?.posts.map((item: Post) => {
+          const content = JSON.parse(item.content);
+          const images = content.blocks.filter(
+            (block) => block.type == "image",
+          );
+          const image = images.length > 0 ? images[0].data.file.url : null;
+          console.log(image);
+          return (
+            <div
+              key={item.id}
+              className="flex gap-4 relative bg-gray-300 h-[150px] justify-center items-center w-[250px]"
+            >
+              <h1 className="absolute z-10 font-semibold text-2xl">
+                {item.title}
+              </h1>
+              <Image
+                fill
+                alt="image"
+                className="w-full h-full object-cover"
+                src={image}
+              />
+              <Link className="absolute bottom-2 right-2 z-10" href="/">
+                See more
+              </Link>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <button className="px-3 py-2 border-2 border-white">
           <Link href="/blog?sec=popular">See more</Link>
         </button>
