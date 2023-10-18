@@ -19,7 +19,6 @@ const getData = async (page: number, sec: string) => {
 
 export const PopularPosts = async () => {
   const data = await getData(1, "popular");
-  console.log(data.posts);
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-semibold">Popular Posts</h1>
@@ -39,12 +38,14 @@ export const PopularPosts = async () => {
               <h1 className="absolute z-10 font-semibold text-2xl">
                 {item.title}
               </h1>
-              <Image
-                fill
-                alt="image"
-                className="w-full h-full object-cover"
-                src={image}
-              />
+              {image && (
+                <Image
+                  fill
+                  alt="image"
+                  className="w-full h-full object-cover"
+                  src={image}
+                />
+              )}
               <Link className="absolute bottom-2 right-2 z-10" href="/">
                 See more
               </Link>
