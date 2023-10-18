@@ -20,6 +20,9 @@ export const GET = async (req: Request) => {
     orderBy: {
       ...(popular ? { views: "desc" } : { createdAt: "desc" }),
     },
+    include: {
+      user: true,
+    },
   };
   try {
     const [posts, count] = await prisma.$transaction([
