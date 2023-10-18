@@ -16,7 +16,8 @@ const Page = async ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
 
   const data = await getData(slug);
-  console.log(data.content, "iohfuef");
+  const jdata = JSON.parse(data.content);
+  console.log("this is json", jdata);
   return (
     <div className="pt-40 p-10 flex flex-col gap-10">
       <div className="flex gap-2 items-center">
@@ -28,7 +29,8 @@ const Page = async ({ params }: { params: { slug: string } }) => {
       <div className="flex flex-col gap-5">
         <h1 className="text-3xl font-semibold">{data.title}</h1>
       </div>
-      <EditorOutput content={data.content} />
+      <EditorOutput content={jdata} />
+
       <Comments postSlug={slug} />
     </div>
   );

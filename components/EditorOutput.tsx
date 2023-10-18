@@ -27,8 +27,6 @@ const renderers = {
 };
 
 export const EditorOutput: React.FC<EditorProps> = ({ content }) => {
-  console.log("this is the content", content);
-  const parsedContent = JSON.parse(content);
   return (
     <Output
       style={style}
@@ -49,7 +47,6 @@ function CustomCodeRenderer({ data }: any) {
 
 function CustonImageRenderer({ data }: any) {
   const src = data.file.url;
-  console.log(src, "this is the file");
   return (
     <div className="relative w-full min-h-[15rem]">
       <Image alt="image" className="object-contain" fill src={src} />
