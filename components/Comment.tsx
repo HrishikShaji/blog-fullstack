@@ -1,16 +1,14 @@
-import { Post } from "@/types/Types";
+import { CommentChild, ExtendedPost } from "@/types/Types";
 import Image from "next/image";
 import { useState } from "react";
 
 interface CommentProps {
-  item: Post;
+  item: CommentChild;
   postSlug: string | null;
 }
 
 export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
-  const [replyForm, setReplyForm] = useState(false);
   const [replies, setReplies] = useState(false);
-  const [replyData, setReplyData] = useState(null);
   const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
   const [reply, setReply] = useState("");
@@ -37,13 +35,15 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
     >
       <div>
         <div className="flex gap-2 items-start w-full">
-          <Image
-            className="h-14 w-14 rounded-full"
-            src={item.user.image}
-            alt="image"
-            height={1000}
-            width={1000}
-          />
+          {item.user.image && (
+            <Image
+              className="h-14 w-14 rounded-full"
+              src={item.user.image}
+              alt="image"
+              height={1000}
+              width={1000}
+            />
+          )}
           <div className="flex flex-col gap-2 w-full">
             <div className="flex gap-2 items-center">
               <span className="font-semibold">{item.user.email}</span>

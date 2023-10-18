@@ -1,25 +1,27 @@
-import { Post } from "@prisma/client";
+import { ExtendedPost } from "@/types/Types";
 import Image from "next/image";
 import Link from "next/link";
 
 interface CardProps {
-  item: Post;
+  item: ExtendedPost;
 }
 
 export const Card: React.FC<CardProps> = ({ item }) => {
-  const data = JSON.parse(item.content);
+  const data = JSON.parse(item.content as any);
   const images = data.blocks.filter((block: any) => block.type == "image");
 
   return (
     <div className="flex relative h-[300px] w-full bg-gray-500 justify-center items-center overflow-hidden">
       <div className="flex gap-2 absolute z-10  top-2 left-2">
-        <Image
-          className="object-cover  w-12 h-12"
-          height={1000}
-          width={1000}
-          alt=""
-          src={item.user.image}
-        />
+        {item.user.image && (
+          <Image
+            className="object-cover  w-12 h-12"
+            height={1000}
+            width={1000}
+            alt=""
+            src={item.user.image}
+          />
+        )}
         <div className="flex flex-col gap-0">
           <h1 className="font-semibold">{item.userEmail}</h1>
           <span className="text-xs">

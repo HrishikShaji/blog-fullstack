@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Comment } from "../components/Comment";
+import { CommentChild } from "@/types/Types";
+import { Comment } from "./Comment";
 
 interface CommentListProps {
   comments: any;
@@ -24,7 +25,7 @@ export const CommentList: React.FC<CommentListProps> = ({
 
   return (
     <div className="w-full overflow-x-hidden">
-      {comments.map((comment, index: number) => {
+      {comments.map((comment: CommentChild, index: number) => {
         return (
           <div
             key={comment.id}

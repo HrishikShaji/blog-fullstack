@@ -4,12 +4,11 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useState } from "react";
-import { Post } from "@/types/Types";
 import { Comment } from "./Comment";
 import { CommentList } from "./CommentList";
 
 interface CommentsProps {
-  postSlug?: string;
+  postSlug: string;
   isReply?: boolean;
   parentId?: string;
 }

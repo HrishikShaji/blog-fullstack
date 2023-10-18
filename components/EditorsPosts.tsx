@@ -1,4 +1,4 @@
-import { Post } from "@/types/Types";
+import { ExtendedPost } from "@/types/Types";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -24,13 +24,12 @@ export const EditorsPosts = async () => {
     <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-semibold">Editors Picks</h1>
       <div className="flex gap-5 items-center justify-between">
-        {data?.posts.map((item: Post) => {
-          const content = JSON.parse(item.content);
+        {data?.posts.map((item: ExtendedPost) => {
+          const content = JSON.parse(item.content as any);
           const images = content.blocks.filter(
-            (block) => block.type == "image",
+            (block: any) => block.type == "image",
           );
           const image = images.length > 0 ? images[0].data.file.url : null;
-          console.log(image);
           return (
             <div
               key={item.id}

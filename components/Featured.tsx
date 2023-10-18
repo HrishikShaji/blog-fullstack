@@ -16,7 +16,7 @@ export const Featured = async () => {
   const data = await getData(1);
 
   const content = JSON.parse(data.posts[0].content);
-  const images = content.blocks.filter((block) => block.type == "image");
+  const images = content.blocks.filter((block: any) => block.type == "image");
   const image = images.length > 0 ? images[0].data.file.url : null;
   return (
     <div className="flex flex-col gap-10">
