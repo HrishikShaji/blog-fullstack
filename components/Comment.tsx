@@ -1,6 +1,6 @@
 import { CommentChild, ExtendedPost } from "@/types/Types";
 import Image from "next/image";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { toast } from "./ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -8,9 +8,10 @@ import axios from "axios";
 interface CommentProps {
   item: CommentChild;
   postSlug: string | null;
+  mutate: () => void;
 }
 
-export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
+export const Comment: React.FC<CommentProps> = ({ item, postSlug, mutate }) => {
   const [replies, setReplies] = useState(false);
   const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
@@ -33,16 +34,19 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
         variant: "destructive",
       });
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      setDesc("");
+      mutate();
+    },
   });
 
-  const handleReply = async (desc: string, parentId: string) => {
+  const handleReply = async (e: FormEvent, desc: string, parentId: string) => {
+    e.preventDefault();
     postComment({
       desc,
       postSlug,
       parentId,
     });
-    setDesc("");
   };
 
   return (
@@ -77,17 +81,20 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
                 {replies ? "Cancel" : "Reply"}
               </button>
               {replies && (
-                <form className="w-full flex gap-2">
+                <form
+                  className="w-full flex gap-2"
+                  onSubmit={(e) => handleReply(e, reply, item.id)}
+                >
                   <input
                     className="w-full bg-transparent border-b-2 focus:outline-none border-white"
                     value={reply}
                     onChange={(e) => setReply(e.target.value)}
                   />
                   <button
+                    type="submit"
                     className="py-1 px-3 border-2 border-white"
-                    onClick={() => handleReply(reply, item.id)}
                   >
-                    Reply
+                    {isPending ? "Replying" : "Reply"}
                   </button>
                 </form>
               )}
