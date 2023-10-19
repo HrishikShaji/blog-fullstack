@@ -6,6 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "./ui/use-toast";
+import { useMutation } from "@tanstack/react-query";
 
 export const Editor = () => {
   const ref = useRef<EditorJS | null>();
@@ -106,6 +107,28 @@ export const Editor = () => {
       .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
+  const { mutate: createPost, isPending } = useMutation({
+    mutationFn: async (payload: any) => {
+      const { data } = await axios.post("/api/comments", payload);
+      return data;
+    },
+    onError: () => {
+      return toast({
+        title: "Something went wrong",
+        description: "Comment not posted",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Done",
+        description: "Post Created Successfully",
+        variant: "default",
+      });
+      router.push("/");
+    },
+  });
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const blocks = await ref.current?.save();
@@ -115,25 +138,7 @@ export const Editor = () => {
       slug: slugify(title),
       cat: cat,
     };
-
-    try {
-      setLoading(true);
-      await axios.post("api/create", payload);
-    } catch (error) {
-      toast({
-        title: "Oops",
-        description: "Something went wrong",
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-      toast({
-        title: "Done",
-        description: "Post Created Successfully",
-        variant: "default",
-      });
-      router.push("/");
-    }
+    createPost(payload);
   };
 
   if (!isMounted) {
@@ -159,7 +164,7 @@ export const Editor = () => {
           <div id="editor" className="min-h-[500px]"></div>
         </div>
         <button className="text-white bg-black py-1 px-2 rounded-md">
-          {loading ? "uploading" : "POST"}
+          {isPending ? "uploading" : "POST"}
         </button>
       </form>
     </div>
