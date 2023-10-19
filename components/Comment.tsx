@@ -1,6 +1,9 @@
 import { CommentChild, ExtendedPost } from "@/types/Types";
 import Image from "next/image";
 import { useState } from "react";
+import { toast } from "./ui/use-toast";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 interface CommentProps {
   item: CommentChild;
@@ -12,20 +15,34 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
   const [desc, setDesc] = useState("");
   const [loading, setLoading] = useState(false);
   const [reply, setReply] = useState("");
-  const handleReply = async (desc: string, parentId: string) => {
-    try {
-      setLoading(true);
 
-      await fetch("/api/comments", {
-        method: "POST",
-        body: JSON.stringify({ desc, postSlug, parentId }),
+  const { mutate: postComment, isPending } = useMutation({
+    mutationFn: async ({ desc, postSlug, parentId }: any) => {
+      const payload = {
+        desc,
+        postSlug,
+        parentId,
+      };
+      const { data } = await axios.post("/api/comments", payload);
+      return data;
+    },
+    onError: () => {
+      return toast({
+        title: "Something went wrong",
+        description: "Comment not posted",
+        variant: "destructive",
       });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setDesc("");
-      setLoading(false);
-    }
+    },
+    onSuccess: () => {},
+  });
+
+  const handleReply = async (desc: string, parentId: string) => {
+    postComment({
+      desc,
+      postSlug,
+      parentId,
+    });
+    setDesc("");
   };
 
   return (
