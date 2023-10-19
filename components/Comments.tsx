@@ -6,6 +6,9 @@ import useSWR from "swr";
 import { useState } from "react";
 import { Comment } from "./Comment";
 import { CommentList } from "./CommentList";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { toast } from "./ui/use-toast";
 
 interface CommentsProps {
   postSlug: string;
@@ -31,29 +34,39 @@ export const Comments: React.FC<CommentsProps> = ({
   parentId,
 }) => {
   const { status } = useSession();
-  const [loading, setLoading] = useState(false);
 
   const { data, isLoading, mutate } = useSWR(
     `http://localhost:3000/api/comments?postSlug=${postSlug}`,
     fetcher,
   );
 
+  const { mutate: postComment, isPending } = useMutation({
+    mutationFn: async ({ desc, postSlug }: any) => {
+      const payload = {
+        desc,
+        postSlug,
+      };
+      const { data } = await axios.post("/api/comments", payload);
+      return data;
+    },
+    onError: () => {
+      return toast({
+        title: "Something went wrong",
+        description: "Comment not posted",
+        variant: "destructive",
+      });
+    },
+    onSuccess: () => {
+      mutate();
+    },
+  });
+
   const [desc, setDesc] = useState("");
   const handleSubmit = async (desc: string) => {
-    try {
-      setLoading(true);
-
-      await fetch("/api/comments", {
-        method: "POST",
-        body: JSON.stringify({ desc, postSlug }),
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      mutate();
-      setDesc("");
-      setLoading(false);
-    }
+    postComment({
+      desc,
+      postSlug,
+    });
   };
 
   return (
@@ -70,7 +83,7 @@ export const Comments: React.FC<CommentsProps> = ({
             onClick={() => handleSubmit(desc)}
             className="px-3 py-2 border-white border-2"
           >
-            {loading ? "sending" : "Send"}
+            {isPending ? "sending" : "Send"}
           </button>
         </div>
       ) : (

@@ -9,7 +9,7 @@ export const GET = async (req: Request) => {
   const cat = searchParams.get("cat");
   const featured = searchParams.get("editor");
   const popular = searchParams.get("popular");
-  const POST_PER_PAGE = 2;
+  const POST_PER_PAGE = 3;
   const query = {
     take: POST_PER_PAGE,
     skip: POST_PER_PAGE * (page - 1),

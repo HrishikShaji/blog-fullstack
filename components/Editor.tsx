@@ -3,16 +3,14 @@
 import { uploadFiles } from "@/utils/uploadthing";
 import EditorJS from "@editorjs/editorjs";
 import axios from "axios";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "./ui/use-toast";
 
 export const Editor = () => {
   const ref = useRef<EditorJS | null>();
-  const titleRef = useRef();
   const [isMounted, setIsMounted] = useState(false);
   const _titleRef = useRef<HTMLTextAreaElement>(null);
-  const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
@@ -134,6 +132,7 @@ export const Editor = () => {
         description: "Post Created Successfully",
         variant: "default",
       });
+      router.push("/");
     }
   };
 
