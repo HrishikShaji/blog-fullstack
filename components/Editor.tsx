@@ -5,6 +5,7 @@ import EditorJS from "@editorjs/editorjs";
 import axios from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { toast } from "./ui/use-toast";
 
 export const Editor = () => {
   const ref = useRef<EditorJS | null>();
@@ -13,6 +14,7 @@ export const Editor = () => {
   const _titleRef = useRef<HTMLTextAreaElement>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [cat, setCat] = useState("");
 
@@ -109,7 +111,6 @@ export const Editor = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const blocks = await ref.current?.save();
-    console.log(blocks);
     const payload = {
       title: title,
       content: blocks,
@@ -118,9 +119,21 @@ export const Editor = () => {
     };
 
     try {
+      setLoading(true);
       await axios.post("api/create", payload);
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Oops",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+      toast({
+        title: "Done",
+        description: "Post Created Successfully",
+        variant: "default",
+      });
     }
   };
 
@@ -147,7 +160,7 @@ export const Editor = () => {
           <div id="editor" className="min-h-[500px]"></div>
         </div>
         <button className="text-white bg-black py-1 px-2 rounded-md">
-          POST
+          {loading ? "uploading" : "POST"}
         </button>
       </form>
     </div>
