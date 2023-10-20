@@ -109,7 +109,7 @@ export const Editor = () => {
 
   const { mutate: createPost, isPending } = useMutation({
     mutationFn: async (payload: PostCreationRequest) => {
-      const { data } = await axios.post("/api/comments", payload);
+      const { data } = await axios.post("/api/posts", payload);
       return data;
     },
     onError: () => {
@@ -129,7 +129,7 @@ export const Editor = () => {
     },
   });
 
-  const validatePostData = (inputs: unknown) => {
+  const validatePostData = async (inputs: unknown) => {
     const isValidData = PostValidator.parse(inputs);
     return isValidData;
   };
@@ -139,13 +139,11 @@ export const Editor = () => {
     const blocks = await ref.current?.save();
     const payload = {
       title: title,
-      content: blocks,
+      content: JSON.stringify(blocks),
       slug: slugify(title),
-      cat: cat,
+      catSlug: cat,
     };
-
-    const validatedPostData = validatePostData(payload);
-
+    const validatedPostData = await validatePostData(payload);
     createPost(validatedPostData);
   };
 

@@ -6,7 +6,7 @@ export const PostValidator = z.object({
     .min(3, { message: "Title must be longer than 3 characters" })
     .max(128, { message: "Title must be atleast 128 characters" }),
 
-  cat: z.string(),
+  catSlug: z.string(),
   slug: z.string(),
   content: z.any(),
 });
