@@ -7,13 +7,13 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "./ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
+import { PostCreationRequest, PostValidator } from "@/lib/validators/post";
 
 export const Editor = () => {
   const ref = useRef<EditorJS | null>();
   const [isMounted, setIsMounted] = useState(false);
   const _titleRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [cat, setCat] = useState("");
 
@@ -108,7 +108,7 @@ export const Editor = () => {
       .replace(/^-+|-+$/g, "");
 
   const { mutate: createPost, isPending } = useMutation({
-    mutationFn: async (payload: any) => {
+    mutationFn: async (payload: PostCreationRequest) => {
       const { data } = await axios.post("/api/comments", payload);
       return data;
     },
@@ -129,6 +129,11 @@ export const Editor = () => {
     },
   });
 
+  const validatePostData = (inputs: unknown) => {
+    const isValidData = PostValidator.parse(inputs);
+    return isValidData;
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const blocks = await ref.current?.save();
@@ -138,7 +143,10 @@ export const Editor = () => {
       slug: slugify(title),
       cat: cat,
     };
-    createPost(payload);
+
+    const validatedPostData = validatePostData(payload);
+
+    createPost(validatedPostData);
   };
 
   if (!isMounted) {
