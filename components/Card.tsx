@@ -1,3 +1,4 @@
+import { formatTimeToNow } from "@/lib/utils";
 import { ExtendedPost } from "@/types/Types";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,7 +26,7 @@ export const Card: React.FC<CardProps> = ({ item }) => {
         <div className="flex flex-col gap-0">
           <h1 className="font-semibold">{item.userEmail}</h1>
           <span className="text-xs">
-            {item.createdAt.toString().substring(0, 10)}
+            {formatTimeToNow(new Date(item.createdAt))}
           </span>
         </div>
       </div>

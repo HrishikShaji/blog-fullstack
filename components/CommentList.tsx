@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { CommentChild } from "@/types/Types";
@@ -36,7 +36,7 @@ export const CommentList: React.FC<CommentListProps> = ({
             <Comment item={comment} postSlug={postSlug} mutate={mutate} />
             <button
               onClick={() => toggleReplies(index)}
-              className="px-3  py-1 border-2 border-white"
+              className="px-2 font-semibold text-gray-400  py-1 text-xs border-2 border-gray-400 focus:outline-none"
             >
               {showReplies[index] ? "Hide Replies" : "Show Replies"}
             </button>

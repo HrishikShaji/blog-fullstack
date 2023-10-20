@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { toast } from "./ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { formatTimeToNow } from "@/lib/utils";
 
 interface CommentProps {
   item: CommentChild;
@@ -65,7 +66,9 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug, mutate }) => {
           <div className="flex flex-col gap-2 w-full">
             <div className="flex gap-2 items-center">
               <span className="font-semibold">{item.user.email}</span>
-              <span className="text-xs text-gray-400">10.3.2023</span>
+              <span className="text-xs text-gray-400">
+                {formatTimeToNow(new Date(item.createdAt))}
+              </span>
             </div>
             <div>
               <p>{item.desc}</p>
@@ -73,7 +76,7 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug, mutate }) => {
             <div className="w-full">
               <button
                 onClick={() => setReplies(!replies)}
-                className="py-1 px-3 border-2 border-white"
+                className="py-1 px-2 border-gray-400 focus:outline-none text-gray-400 font-semibold text-xs border-2"
               >
                 {replies ? "Cancel" : "Reply"}
               </button>
@@ -89,7 +92,7 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug, mutate }) => {
                   />
                   <button
                     type="submit"
-                    className="py-1 px-3 border-2 border-white"
+                    className="py-1 px-3 border-2 focus:outline-none border-gray-400 text-xs font-semibold text-gray-400"
                   >
                     {isPending ? "Replying" : "Reply"}
                   </button>

@@ -17,6 +17,7 @@ const createComments = (comments: any, parentId: string | null = null): any => {
       id: comm.id,
       desc: comm.desc,
       user: comm.user,
+      createdAt: comm.createdAt,
       children: createComments(comments, comm.id),
     });
   }

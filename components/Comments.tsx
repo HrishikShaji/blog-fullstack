@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useState } from "react";
-import { Comment } from "./Comment";
 import { CommentList } from "./CommentList";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -12,8 +11,6 @@ import { toast } from "./ui/use-toast";
 
 interface CommentsProps {
   postSlug: string;
-  isReply?: boolean;
-  parentId?: string;
 }
 
 const fetcher = async (url: string) => {
@@ -28,11 +25,7 @@ const fetcher = async (url: string) => {
   return data;
 };
 
-export const Comments: React.FC<CommentsProps> = ({
-  postSlug,
-  isReply,
-  parentId,
-}) => {
+export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
   const { status } = useSession();
 
   const { data, isLoading, mutate } = useSWR(
@@ -81,7 +74,7 @@ export const Comments: React.FC<CommentsProps> = ({
           />
           <button
             onClick={() => handleSubmit(desc)}
-            className="px-3 py-2 border-white border-2"
+            className="px-3 py-2 border-gray-400  border-2"
           >
             {isPending ? "sending" : "Send"}
           </button>
