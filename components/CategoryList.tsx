@@ -5,13 +5,17 @@ import { useEffect, useState } from "react";
 
 export const CategoryList = () => {
   const [data, setData] = useState<Category[] | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
+    setIsMounted(true);
     fetch("http://localhost:3000/api/categories")
       .then((res) => res.json())
       .then((data) => {
         setData(data);
       });
   }, []);
+
+  if (!isMounted) return <div>Loading...</div>;
   return (
     <div className="flex flex-col gap-5 py-10">
       <h1 className="text-3xl font-semibold">Popular categories</h1>

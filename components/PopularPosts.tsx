@@ -19,6 +19,7 @@ const getData = async (page: number, sec: string) => {
 
 export const PopularPosts = async () => {
   const data = await getData(1, "popular");
+  if (!data.posts) return <div>Loading...</div>;
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-semibold">Popular Posts</h1>

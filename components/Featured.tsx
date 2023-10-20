@@ -16,6 +16,8 @@ const getData = async (page: number) => {
 export const Featured = async () => {
   const data = await getData(1);
 
+  if (!data.posts) return <div>Loading...</div>;
+
   const content = JSON.parse(data.posts[0].content);
   const images = content.blocks.filter((block: any) => block.type == "image");
   const image = images.length > 0 ? images[0].data.file.url : null;
