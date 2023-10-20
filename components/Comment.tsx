@@ -1,4 +1,4 @@
-import { CommentChild, ExtendedPost } from "@/types/Types";
+import { CommentChild } from "@/types/Types";
 import Image from "next/image";
 import { FormEvent, useState } from "react";
 import { toast } from "./ui/use-toast";
@@ -13,8 +13,6 @@ interface CommentProps {
 
 export const Comment: React.FC<CommentProps> = ({ item, postSlug, mutate }) => {
   const [replies, setReplies] = useState(false);
-  const [desc, setDesc] = useState("");
-  const [loading, setLoading] = useState(false);
   const [reply, setReply] = useState("");
 
   const { mutate: postComment, isPending } = useMutation({
@@ -35,8 +33,7 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug, mutate }) => {
       });
     },
     onSuccess: () => {
-      setDesc("");
-      mutate();
+      setReply("");
     },
   });
 

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const getData = async (page: number) => {
   const res = await fetch(`http://localhost:3000/api/posts?page=${page}`, {
@@ -34,9 +35,12 @@ export const Featured = async () => {
         <h1 className="absolute z-10 text-4xl font-bold ">
           {data?.posts[0].title}
         </h1>
-        <button className="absolute z-10 text-xl bottom-2 right-2">
+        <Link
+          href={`posts/${data.posts[0].slug}`}
+          className="absolute z-10 text-xl bottom-2 right-2"
+        >
           Read more
-        </button>
+        </Link>
       </div>
     </div>
   );
