@@ -28,6 +28,7 @@ const fetcher = async (url: string) => {
 export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
   const { status } = useSession();
 
+  const [desc, setDesc] = useState("");
   const { data, isLoading, mutate } = useSWR(
     `http://localhost:3000/api/comments?postSlug=${postSlug}`,
     fetcher,
@@ -51,10 +52,10 @@ export const Comments: React.FC<CommentsProps> = ({ postSlug }) => {
     },
     onSuccess: () => {
       mutate();
+      setDesc("");
     },
   });
 
-  const [desc, setDesc] = useState("");
   const handleSubmit = async (desc: string) => {
     postComment({
       desc,

@@ -137,9 +137,9 @@ export const Editor = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const blocks = await ref.current?.save();
-    const payload = {
+    const payload: PostCreationRequest = {
       title: title,
-      content: JSON.stringify(blocks),
+      content: blocks,
       slug: slugify(title),
       catSlug: cat,
     };

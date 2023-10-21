@@ -16,11 +16,11 @@ const getData = async (page: number) => {
 export const Featured = async () => {
   const data = await getData(1);
 
-  if (!data.posts) return <div>Loading...</div>;
+  if (!data.posts[0]) return <div>NO POSTS YET...</div>;
   console.log(data.posts[0]);
-  const content = JSON.parse(data.posts[0].content);
-  const images = content.blocks.filter((block: any) => block.type == "image");
-  const image = images.length > 0 ? images[0].data.file.url : null;
+  const content = data.posts[0] ? data?.posts[0].content : null;
+  const images = content?.blocks.filter((block: any) => block.type == "image");
+  const image = images?.length > 0 ? images[0].data.file.url : null;
   return (
     <div className="flex flex-col gap-10">
       <h1 className="text-4xl">Discover my Stories and creative ideas</h1>
@@ -35,10 +35,10 @@ export const Featured = async () => {
           />
         )}
         <h1 className="absolute z-10 text-4xl font-bold ">
-          {data?.posts[0].title}
+          {data?.posts[0]?.title}
         </h1>
         <Link
-          href={`posts/${data.posts[0].slug}`}
+          href={`posts/${data?.posts[0]?.slug}`}
           className="absolute z-10 text-xl bottom-2 right-2"
         >
           Read more

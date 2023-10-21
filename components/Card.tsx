@@ -8,7 +8,7 @@ interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ item }) => {
-  const data = JSON.parse(item.content as any);
+  const data = item.content as any;
   const images = data.blocks.filter((block: any) => block.type == "image");
 
   return (

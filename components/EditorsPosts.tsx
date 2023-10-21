@@ -25,7 +25,7 @@ export const EditorsPosts = async () => {
       <h1 className="text-3xl font-semibold">Editors Picks</h1>
       <div className="flex gap-5 items-center justify-between">
         {data?.posts.map((item: ExtendedPost) => {
-          const content = JSON.parse(item.content as any);
+          const content = item.content as any;
           const images = content.blocks.filter(
             (block: any) => block.type == "image",
           );
