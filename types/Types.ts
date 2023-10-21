@@ -23,3 +23,9 @@ export type CommentChild = {
   createdAt: Date;
   children: CommentChild[];
 };
+
+export enum CategorySlug {
+  Coding,
+  Style,
+  Travel,
+}

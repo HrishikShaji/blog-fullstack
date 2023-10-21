@@ -8,6 +8,7 @@ import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "./ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { PostCreationRequest, PostValidator } from "@/lib/validators/post";
+import { ZodError } from "zod";
 
 export const Editor = () => {
   const ref = useRef<EditorJS | null>();
@@ -125,26 +126,48 @@ export const Editor = () => {
         description: "Post Created Successfully",
         variant: "default",
       });
-      router.push("/");
     },
   });
 
   const validatePostData = async (inputs: unknown) => {
-    const isValidData = PostValidator.parse(inputs);
-    return isValidData;
+    try {
+      const isValidData = PostValidator.parse(inputs);
+      return isValidData;
+    } catch (error) {
+      if (error instanceof ZodError) {
+        // Log the error message to the console
+        //
+        console.error(error.errors[0].message);
+        if (Object.keys(error.errors).length) {
+          for (const [_key, value] of Object.entries(error)) {
+            console.log((value as { message: string }).message);
+          }
+        }
+      }
+      // You can return some default value or handle the error in another way if needed
+      return null;
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const blocks = await ref.current?.save();
-    const payload: PostCreationRequest = {
+    console.log(blocks);
+    const payload = {
       title: title,
       content: blocks,
       slug: slugify(title),
       catSlug: cat,
     };
     const validatedPostData = await validatePostData(payload);
-    createPost(validatedPostData);
+    if (validatedPostData === null) {
+      return toast({
+        title: "error",
+        description: "error",
+      });
+    } else {
+      createPost(validatedPostData);
+    }
   };
 
   if (!isMounted) {
