@@ -1,30 +1,18 @@
+import { fetchPosts } from "@/lib/utils";
 import { ExtendedPost } from "@/types/Types";
 import Image from "next/image";
 import Link from "next/link";
 
-const getData = async (page: number, sec: string) => {
-  const res = await fetch(
-    `http://localhost:3000/api/posts?page=${page}&${sec}=true`,
-    {
-      cache: "no-store",
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed");
-  }
-
-  return res.json();
-};
-
 export const PopularPosts = async () => {
-  const data = await getData(1, "popular");
-  if (!data.posts) return <div>Loading...</div>;
+  const { posts } = await fetchPosts(
+    `http://localhost:3000/api/posts?page=1&popular=true`,
+  );
+  if (!posts) return <div>Loading...</div>;
   return (
     <div className="flex flex-col gap-5">
       <h1 className="text-3xl font-semibold">Popular Posts</h1>
       <div className="flex gap-5 items-center justify-between">
-        {data?.posts.map((item: ExtendedPost) => {
+        {posts.map((item: ExtendedPost) => {
           const content = item.content as any;
           const images = content.blocks.filter(
             (block: any) => block.type == "image",

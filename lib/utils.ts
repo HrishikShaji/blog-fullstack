@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatDistanceToNowStrict } from "date-fns";
 import locale from "date-fns/locale/en-US";
+import { Post } from "@prisma/client";
+import { ExtendedPost } from "@/types/Types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -54,3 +56,20 @@ export function formatTimeToNow(date: Date): string {
     },
   });
 }
+
+type PostData = {
+  posts: ExtendedPost[];
+  count: number;
+};
+
+export const fetchPosts = async (url: string): Promise<PostData> => {
+  const res = await fetch(url, {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed");
+  }
+
+  return res.json();
+};

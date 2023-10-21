@@ -1,25 +1,13 @@
+import { fetchPosts } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-const getData = async (page: number) => {
-  const res = await fetch(`http://localhost:3000/api/posts?page=${page}`, {
-    cache: "no-store",
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed");
-  }
-
-  return res.json();
-};
-
 export const Featured = async () => {
-  const data = await getData(1);
+  const { posts } = await fetchPosts(`http://localhost:3000/api/posts?page=1`);
 
-  if (!data.posts[0]) return <div>NO POSTS YET...</div>;
-  console.log(data.posts[0]);
-  const content = data.posts[0] ? data?.posts[0].content : null;
-  const images = content?.blocks.filter((block: any) => block.type == "image");
+  if (!posts[0]) return <div>NO POSTS YET...</div>;
+  const content = posts[0]?.content as any;
+  const images = content.blocks.filter((block: any) => block.type == "image");
   const image = images?.length > 0 ? images[0].data.file.url : null;
   return (
     <div className="flex flex-col gap-10">
@@ -34,11 +22,9 @@ export const Featured = async () => {
             src={image}
           />
         )}
-        <h1 className="absolute z-10 text-4xl font-bold ">
-          {data?.posts[0]?.title}
-        </h1>
+        <h1 className="absolute z-10 text-4xl font-bold ">{posts[0]?.title}</h1>
         <Link
-          href={`posts/${data?.posts[0]?.slug}`}
+          href={`posts/${posts[0]?.slug}`}
           className="absolute z-10 text-xl bottom-2 right-2"
         >
           Read more

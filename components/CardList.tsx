@@ -1,21 +1,7 @@
 import { ExtendedPost } from "@/types/Types";
 import { Card } from "./Card";
 import { Pagination } from "./Pagination";
-
-const getData = async (page: number, cat?: string, sec?: string) => {
-  const res = await fetch(
-    `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}&${sec}=true`,
-    {
-      cache: "no-store",
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed");
-  }
-
-  return res.json();
-};
+import { fetchPosts } from "@/lib/utils";
 
 interface CardListProps {
   page: number;
@@ -24,7 +10,9 @@ interface CardListProps {
 }
 
 export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
-  const { posts, count } = await getData(page, cat, sec);
+  const { posts, count } = await fetchPosts(
+    `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}&${sec}=true`,
+  );
   const POST_PER_PAGE = 2;
 
   const hasPrev = POST_PER_PAGE * (page - 1) > 0;
