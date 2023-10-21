@@ -126,6 +126,7 @@ export const Editor = () => {
         description: "Post Created Successfully",
         variant: "default",
       });
+      router.push("/");
     },
   });
 
@@ -135,38 +136,34 @@ export const Editor = () => {
       return isValidData;
     } catch (error) {
       if (error instanceof ZodError) {
-        // Log the error message to the console
-        //
-        console.error(error.errors[0].message);
         if (Object.keys(error.errors).length) {
-          for (const [_key, value] of Object.entries(error)) {
-            console.log((value as { message: string }).message);
+          for (const [_key, value] of Object.entries(error.errors)) {
+            throw new Error((value as { message: string }).message);
           }
         }
       }
-      // You can return some default value or handle the error in another way if needed
-      return null;
+      throw error;
     }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const blocks = await ref.current?.save();
-    console.log(blocks);
     const payload = {
       title: title,
       content: blocks,
       slug: slugify(title),
       catSlug: cat,
     };
-    const validatedPostData = await validatePostData(payload);
-    if (validatedPostData === null) {
-      return toast({
-        title: "error",
-        description: "error",
-      });
-    } else {
+    try {
+      const validatedPostData = await validatePostData(payload);
       createPost(validatedPostData);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: `${error}`,
+        variant: "destructive",
+      });
     }
   };
 
