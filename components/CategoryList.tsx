@@ -1,21 +1,20 @@
-"use client";
 import { Category } from "@prisma/client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export const CategoryList = () => {
-  const [data, setData] = useState<Category[] | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => {
-    setIsMounted(true);
-    fetch("http://localhost:3000/api/categories")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      });
-  }, []);
+const fetchCategories = async () => {
+  const res = await fetch("http://localhost:3000/api/categories", {
+    cache: "no-store",
+  });
 
-  if (!isMounted) return <div>Loading...</div>;
+  if (!res.ok) {
+    throw new Error("Failed");
+  }
+
+  return res.json();
+};
+
+export const CategoryList = async () => {
+  const data = await fetchCategories();
   return (
     <div className="flex flex-col gap-5 py-10">
       <h1 className="text-3xl font-semibold">Popular categories</h1>

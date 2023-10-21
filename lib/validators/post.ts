@@ -6,12 +6,7 @@ export const PostValidator = z.object({
     .min(3, { message: "Title must be longer than 3 characters" })
     .max(128, { message: "Title must be atleast 128 characters" }),
 
-  catSlug: z.enum(["coding", "travel", "style"]).refine(
-    (catSlug) => {
-      return ["coding", "travel", "style"].includes(catSlug);
-    },
-    { message: "Invalid category" },
-  ),
+  catSlug: z.string(),
   slug: z.string(),
   content: z.object({
     time: z.number(),
