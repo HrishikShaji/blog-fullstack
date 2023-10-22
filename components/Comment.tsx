@@ -23,6 +23,7 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
         parentId,
       };
       const { data } = await axios.post("/api/comments", payload);
+      console.log("data is ", data);
       return data;
     },
     onError: () => {
@@ -39,6 +40,7 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
 
   const handleReply = async (e: FormEvent, desc: string, parentId: string) => {
     e.preventDefault();
+    console.log("reply is ", desc, parentId, postSlug);
     postComment({
       desc,
       postSlug,
@@ -53,7 +55,7 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
     >
       <div>
         <div className="flex gap-2 items-start w-full">
-          {item.user.image && (
+          {item?.user?.image && (
             <Image
               className="h-14 w-14 rounded-full"
               src={item.user.image}

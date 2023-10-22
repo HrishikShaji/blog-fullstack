@@ -21,10 +21,13 @@ export const GET = async (
         postSlug: postSlug,
         parentId: params.params.commentId,
       },
+      include: {
+        user: true,
+      },
     });
 
     console.log("comments are", comments);
-    return new NextResponse(JSON.stringify({ message: "ok" }));
+    return new NextResponse(JSON.stringify(comments));
   } catch (err) {
     return new NextResponse(
       JSON.stringify({ message: "Something went wrong" }),
