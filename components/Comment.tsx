@@ -9,10 +9,9 @@ import { formatTimeToNow } from "@/lib/utils";
 interface CommentProps {
   item: CommentChild;
   postSlug: string | null;
-  mutate: () => void;
 }
 
-export const Comment: React.FC<CommentProps> = ({ item, postSlug, mutate }) => {
+export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
   const [replies, setReplies] = useState(false);
   const [reply, setReply] = useState("");
 
