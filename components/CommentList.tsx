@@ -32,7 +32,7 @@ export const CommentList: React.FC<CommentListProps> = ({
   const [showReplies, setShowReplies] = useState(
     comments ? Array(comments.length).fill(false) : [],
   );
-  const [replies, setReplies] = useState(null);
+  const [replies, setReplies] = useState([]);
   const { data, isLoading, mutate } = useSWR(
     `http://localhost:3000/api/comments/${commentId}?postSlug=${postSlug}`,
     fetcher,
@@ -42,13 +42,16 @@ export const CommentList: React.FC<CommentListProps> = ({
     newShowReplies[index] = !newShowReplies[index];
     setShowReplies(newShowReplies);
 
-    const response = await fetch(
-      `http://localhost:3000/api/comments/${commentId}?postSlug=${postSlug}`,
-      { method: "GET" },
-    );
-    const data = response.json();
-    const res = data.then((res) => setReplies(res));
-    console.log("replies are ", commentId, postSlug, replies);
+    if (!replies[index]) {
+      // Fetch replies only if they haven't been fetched for this comment before.
+      const response = await fetch(
+        `http://localhost:3000/api/comments/${commentId}?postSlug=${postSlug}`,
+        { method: "GET" },
+      );
+      const data = await response.json();
+      replies[index] = data;
+      setReplies([...replies]);
+    }
   };
 
   return (
@@ -66,15 +69,17 @@ export const CommentList: React.FC<CommentListProps> = ({
             >
               {showReplies[index] ? "Hide Replies" : "Show Replies"}
             </button>
-            {showReplies[index] && comment.children.length > 0 && (
-              <div className="ml-10 w-full">
-                <CommentList
-                  comments={replies}
-                  postSlug={postSlug}
-                  commentId={comment.id}
-                />
-              </div>
-            )}
+            {showReplies[index] &&
+              replies[index] &&
+              replies[index].length > 0 && (
+                <div className="ml-10 w-full">
+                  <CommentList
+                    comments={replies[index]}
+                    postSlug={postSlug}
+                    commentId={comment.id}
+                  />
+                </div>
+              )}
           </div>
         );
       })}
