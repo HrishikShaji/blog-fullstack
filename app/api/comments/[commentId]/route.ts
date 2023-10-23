@@ -15,7 +15,6 @@ export const GET = async (
     return new NextResponse(JSON.stringify({ message: "Comment id missing" }));
   }
   try {
-    console.log("postSlug is", postSlug, params);
     const comments = await prisma.comment.findMany({
       where: {
         postSlug: postSlug,
@@ -26,7 +25,6 @@ export const GET = async (
       },
     });
 
-    console.log("comments are", comments);
     return new NextResponse(JSON.stringify(comments));
   } catch (err) {
     return new NextResponse(
