@@ -9,9 +9,14 @@ import { formatTimeToNow } from "@/lib/utils";
 interface CommentProps {
   item: CommentChild;
   postSlug: string | null;
+  refetch?: () => void;
 }
 
-export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
+export const Comment: React.FC<CommentProps> = ({
+  item,
+  postSlug,
+  refetch,
+}) => {
   const [replies, setReplies] = useState(false);
   const [reply, setReply] = useState("");
 
@@ -23,7 +28,6 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
         parentId,
       };
       const { data } = await axios.post("/api/comments", payload);
-      console.log("data is ", data);
       return data;
     },
     onError: () => {
@@ -35,12 +39,15 @@ export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
     },
     onSuccess: () => {
       setReply("");
+      if (refetch) {
+        console.log("refetch is here ", refetch);
+        refetch();
+      }
     },
   });
 
   const handleReply = async (e: FormEvent, desc: string, parentId: string) => {
     e.preventDefault();
-    console.log("reply is ", desc, parentId, postSlug);
     postComment({
       desc,
       postSlug,

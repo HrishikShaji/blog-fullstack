@@ -12,7 +12,6 @@ export const POST = async (req: Request) => {
   try {
     const body = await req.json();
 
-    console.log("body is", body);
     const reply = await prisma.comment.create({
       data: { ...body, userEmail: session?.user?.email },
     });
@@ -32,7 +31,6 @@ export const POST = async (req: Request) => {
         },
       },
     });
-    console.log("original is", originalComment);
 
     return new NextResponse(JSON.stringify(reply));
   } catch (err) {

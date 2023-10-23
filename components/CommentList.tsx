@@ -1,22 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { CommentChild } from "@/types/Types";
 import { Comment } from "./Comment";
-import useSWR from "swr";
-import { date } from "zod";
 import { useQuery } from "@tanstack/react-query";
+import { ref } from "firebase/storage";
 
 interface CommentListProps {
   comments: any;
   postSlug: string | null;
   commentId?: string;
+  refetch?: () => void;
 }
 
 export const CommentList: React.FC<CommentListProps> = ({
   comments,
   postSlug,
   commentId,
+  refetch,
 }) => {
   const [showReplies, setShowReplies] = useState(
     comments ? Array(comments.length).fill(false) : [],
@@ -28,6 +28,8 @@ export const CommentList: React.FC<CommentListProps> = ({
     setShowReplies(newShowReplies);
   };
 
+  console.log(refetch);
+
   return (
     <div className="w-full overflow-x-hidden">
       {comments?.map((comment: any, index: number) => {
@@ -36,7 +38,7 @@ export const CommentList: React.FC<CommentListProps> = ({
             key={comment.id}
             className="border-b-2 pb-4 flex flex-col gap-2 items-start border-white"
           >
-            <Comment item={comment} postSlug={postSlug} />
+            <Comment refetch={refetch} item={comment} postSlug={postSlug} />
             <button
               onClick={() => toggleReplies(index, comment.id)}
               className="px-2 font-semibold text-gray-400  py-1 text-xs border-2 border-gray-400 focus:outline-none"
@@ -62,7 +64,7 @@ const CommentListContainer: React.FC<{
   commentId: string;
   postSlug: string | null;
 }> = ({ commentId, postSlug }) => {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["replies", commentId, postSlug],
     queryFn: async () => {
       const response = await fetch(
@@ -85,6 +87,11 @@ const CommentListContainer: React.FC<{
   }
 
   return (
-    <CommentList comments={data} postSlug={postSlug} commentId={commentId} />
+    <CommentList
+      comments={data}
+      postSlug={postSlug}
+      refetch={refetch}
+      commentId={commentId}
+    />
   );
 };

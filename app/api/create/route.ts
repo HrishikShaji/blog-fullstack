@@ -10,7 +10,6 @@ export const POST = async (req: Request) => {
   try {
     const body = await req.json();
     const content = JSON.stringify(body.content);
-    console.log("payload is here", body, content);
     const post = await prisma.post.create({
       data: {
         title: body.title,
@@ -20,7 +19,6 @@ export const POST = async (req: Request) => {
         catSlug: body.cat,
       },
     });
-    console.log(post);
 
     return new NextResponse(JSON.stringify(post));
   } catch (err) {
