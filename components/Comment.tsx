@@ -1,25 +1,22 @@
+"use client";
 import { CommentChild } from "@/types/Types";
 import Image from "next/image";
 import { FormEvent, useState } from "react";
 import { toast } from "./ui/use-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { formatTimeToNow } from "@/lib/utils";
 
 interface CommentProps {
   item: CommentChild;
   postSlug: string | null;
-  refetch?: () => void;
 }
 
-export const Comment: React.FC<CommentProps> = ({
-  item,
-  postSlug,
-  refetch,
-}) => {
+export const Comment: React.FC<CommentProps> = ({ item, postSlug }) => {
   const [replies, setReplies] = useState(false);
   const [reply, setReply] = useState("");
 
+  const queryClient = useQueryClient();
   const { mutate: postComment, isPending } = useMutation({
     mutationFn: async ({ desc, postSlug, parentId }: any) => {
       const payload = {
@@ -39,10 +36,7 @@ export const Comment: React.FC<CommentProps> = ({
     },
     onSuccess: () => {
       setReply("");
-      if (refetch) {
-        console.log("refetch is here ", refetch);
-        refetch();
-      }
+      queryClient.invalidateQueries({ queryKey: ["replies"] });
     },
   });
 

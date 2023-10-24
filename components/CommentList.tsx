@@ -3,32 +3,25 @@
 import { useState } from "react";
 import { Comment } from "./Comment";
 import { useQuery } from "@tanstack/react-query";
-import { ref } from "firebase/storage";
 
 interface CommentListProps {
   comments: any;
   postSlug: string | null;
   commentId?: string;
-  refetch?: () => void;
 }
 
 export const CommentList: React.FC<CommentListProps> = ({
   comments,
   postSlug,
-  commentId,
-  refetch,
 }) => {
   const [showReplies, setShowReplies] = useState(
     comments ? Array(comments.length).fill(false) : [],
   );
-  const [replies, setReplies] = useState([]);
-  const toggleReplies = async (index: number, commentId: string) => {
+  const toggleReplies = async (index: number) => {
     const newShowReplies = [...showReplies];
     newShowReplies[index] = !newShowReplies[index];
     setShowReplies(newShowReplies);
   };
-
-  console.log(refetch);
 
   return (
     <div className="w-full overflow-x-hidden">
@@ -38,9 +31,9 @@ export const CommentList: React.FC<CommentListProps> = ({
             key={comment.id}
             className="border-b-2 pb-4 flex flex-col gap-2 items-start border-white"
           >
-            <Comment refetch={refetch} item={comment} postSlug={postSlug} />
+            <Comment item={comment} postSlug={postSlug} />
             <button
-              onClick={() => toggleReplies(index, comment.id)}
+              onClick={() => toggleReplies(index)}
               className="px-2 font-semibold text-gray-400  py-1 text-xs border-2 border-gray-400 focus:outline-none"
             >
               {showReplies[index] ? "Hide Replies" : "Show Replies"}
@@ -64,7 +57,7 @@ const CommentListContainer: React.FC<{
   commentId: string;
   postSlug: string | null;
 }> = ({ commentId, postSlug }) => {
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["replies", commentId, postSlug],
     queryFn: async () => {
       const response = await fetch(
@@ -87,11 +80,6 @@ const CommentListContainer: React.FC<{
   }
 
   return (
-    <CommentList
-      comments={data}
-      postSlug={postSlug}
-      refetch={refetch}
-      commentId={commentId}
-    />
+    <CommentList comments={data} postSlug={postSlug} commentId={commentId} />
   );
 };
