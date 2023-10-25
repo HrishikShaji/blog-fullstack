@@ -46,6 +46,11 @@ export const Card: React.FC<CardProps> = ({ item }) => {
       >
         See more
       </Link>
+      <div className="absolute z-10 bottom-2 left-2 flex gap-2">
+        <button className="px-2 py-1 border-white border-2">Like</button>
+        <button className="px-2 py-1 border-white border-2">Dislike</button>
+        <h1>{item.votes.length}</h1>
+      </div>
     </div>
   );
 };
