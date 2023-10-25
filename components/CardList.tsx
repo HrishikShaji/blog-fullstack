@@ -24,9 +24,9 @@ export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
 
       <div className="flex  gap-3">
         <div className="w-full flex flex-col gap-3">
-          {posts?.map((item: ExtendedPost) => (
-            <Card item={item} key={item.id} />
-          ))}
+          {posts?.map((item: ExtendedPost) => {
+            return <Card item={item} key={item.id} />;
+          })}
         </div>
       </div>
       <Pagination

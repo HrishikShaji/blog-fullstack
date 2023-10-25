@@ -104,8 +104,8 @@ UNLIKE
 
 model Vote{
 id String @map("_id") @id @default(cuid())
-user User @relation(fields: [userId],references: [id])
-userId String
+user User @relation(fields: [emailId],references: [email])
+emailId String
 post Post @relation(fields:[postId],references: [id],onDelete:Cascade)
 postId String
 type VoteType
