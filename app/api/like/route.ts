@@ -7,7 +7,7 @@ export async function PATCH(req: Request) {
     const body = await req.json();
 
     const { postId, voteType } = body;
-
+    console.log(postId, voteType);
     const session = await getAuthSession();
 
     if (!session?.user?.email) {
