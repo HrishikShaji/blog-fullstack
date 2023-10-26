@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/connect";
+import { fi } from "date-fns/esm/locale";
 
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
   const sortBy = searchParams.get("sort")?.toString();
-  console.log(sortBy);
+  const filterBy = searchParams.get("filter")?.toString();
+  console.log(filterBy);
   const sort = sortBy as string;
   const order = "desc";
   const orderBy = { [sort]: order };
@@ -12,6 +14,7 @@ export const GET = async (req: Request) => {
   try {
     if (sort === "votes") {
       const posts = await prisma.post.findMany({
+        ...(filterBy && { where: { catSlug: filterBy } }),
         include: {
           votes: true,
           user: true,
@@ -25,6 +28,7 @@ export const GET = async (req: Request) => {
       return new NextResponse(JSON.stringify(posts));
     }
     const posts = await prisma.post.findMany({
+      ...(filterBy && { where: { catSlug: filterBy } }),
       include: {
         votes: true,
         user: true,

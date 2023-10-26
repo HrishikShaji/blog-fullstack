@@ -56,6 +56,19 @@ const Page = () => {
         setFinalResults(results);
       });
   };
+
+  const handleFilter = async (filter: string) => {
+    await fetch(`/api/search?filter=${filter}`)
+      .then((response) => response.json())
+      .then((json) => {
+        const results = json.filter((post: ExtendedPost) => {
+          return (
+            post && post.slug && post.slug.toLowerCase().includes(inputValue)
+          );
+        });
+        setFinalResults(results);
+      });
+  };
   return (
     <div className="min-h-screen w-full pt-20 p-10 flex flex-col gap-2 items-center">
       <div>
@@ -123,6 +136,17 @@ const Page = () => {
           <button onClick={() => handleSort("votes")}>Likes</button>
         </div>
       </div>
+      <div className="flex flex-col items-center gap-2">
+        <h1>Filter By</h1>
+        <div className="flex gap-2">
+          <button onClick={() => handleFilter("style")}>Frontend</button>
+          <button onClick={() => handleFilter("travel")}>Backend</button>
+          <button onClick={() => handleFilter("coding")}>UI/UX</button>
+          <button onClick={() => handleFilter("devops")}>DevOps</button>
+          <button onClick={() => handleFilter("ai")}>AI</button>
+          <button onClick={() => handleFilter("blockchain")}>Blockchain</button>
+        </div>
+      </div>
       <div className="w-full">
         {finalResults.map((post: ExtendedPost) => {
           const content = post.content as any;
@@ -153,6 +177,8 @@ const Page = () => {
                 <div>
                   <h1>{post.title}</h1>
                   <h1>{desc.data?.text}</h1>
+                  <h1>{post.votes.length}</h1>
+                  <h1>{post.catSlug}</h1>
                 </div>
                 <div>
                   {post.user.image && (
