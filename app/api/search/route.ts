@@ -6,7 +6,12 @@ export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
 
   try {
-    const posts = await prisma.post.findMany({});
+    const posts = await prisma.post.findMany({
+      include: {
+        votes: true,
+        user: true,
+      },
+    });
     return new NextResponse(JSON.stringify(posts));
   } catch (err) {
     return new NextResponse(
