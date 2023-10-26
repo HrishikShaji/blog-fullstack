@@ -3,9 +3,7 @@
 import { ExtendedPost } from "@/types/Types";
 import { useState } from "react";
 import Image from "next/image";
-import { Link } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { set } from "date-fns";
 
 const Page = () => {
   const [inputValue, setInputValue] = useState("");
@@ -13,7 +11,7 @@ const Page = () => {
   const [finalResults, setFinalResults] = useState([]);
   const [suggestions, setSuggestions] = useState(false);
   const router = useRouter();
-  const fetchData = async (value) => {
+  const fetchData = async (value: string) => {
     if (value !== "") {
       console.log(value);
       await fetch("/api/search")
@@ -27,7 +25,7 @@ const Page = () => {
     }
   };
 
-  const handleChange = (value) => {
+  const handleChange = (value: string) => {
     setInputValue(value);
     fetchData(value);
   };
@@ -35,6 +33,19 @@ const Page = () => {
   const handleSearch = async () => {
     setSuggestions(false);
     await fetch("/api/search")
+      .then((response) => response.json())
+      .then((json) => {
+        const results = json.filter((post: ExtendedPost) => {
+          return (
+            post && post.slug && post.slug.toLowerCase().includes(inputValue)
+          );
+        });
+        setFinalResults(results);
+      });
+  };
+
+  const handleSort = async (sort: string) => {
+    await fetch(`/api/search?sort=${sort}`)
       .then((response) => response.json())
       .then((json) => {
         const results = json.filter((post: ExtendedPost) => {
@@ -68,12 +79,8 @@ const Page = () => {
             {inputValue !== "" ? (
               results.map((post: ExtendedPost) => {
                 const content = post.content as any;
-                console.log(content);
                 const images = content.blocks.filter(
                   (block: any) => block.type == "image",
-                );
-                const desc = content.blocks.filter(
-                  (block: any) => block.type == "paragraph",
                 );
                 const image =
                   images?.length > 0 ? images[0].data.file.url : null;
@@ -107,6 +114,14 @@ const Page = () => {
             )}
           </div>
         )}
+      </div>
+      <div className="flex flex-col items-center gap-2">
+        <h1>Sort By</h1>
+        <div className="flex gap-2">
+          <button onClick={() => handleSort("createdAt")}>Date</button>
+          <button onClick={() => handleSort("views")}>Views</button>
+          <button onClick={() => handleSort("votes")}>Likes</button>
+        </div>
       </div>
       <div className="w-full">
         {finalResults.map((post: ExtendedPost) => {
