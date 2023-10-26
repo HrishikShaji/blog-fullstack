@@ -32,7 +32,7 @@ export const Card: React.FC<CardProps> = ({ item }) => {
 
   useEffect(() => {
     setCurrentVote(initialVote?.type);
-  }, [initialVote]);
+  }, [initialVote?.type]);
   console.log(currentVote);
   const { mutate: vote } = useMutation({
     mutationFn: async (voteType: VoteType) => {

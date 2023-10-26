@@ -44,7 +44,7 @@ export async function PATCH(req: Request) {
         });
         return new Response("OK");
       }
-      await prisma.vote.updateMany({
+      const like = await prisma.vote.updateMany({
         where: {
           postId,
           emailId: session.user.email,
@@ -54,6 +54,8 @@ export async function PATCH(req: Request) {
         },
       });
 
+      console.log("like is updated", like);
+
       const likesAmt = post.votes.reduce((acc, vote) => {
         if (vote.type === "LIKE") return acc + 1;
         if (vote.type === "UNLIKE") return acc - 1;
@@ -62,13 +64,14 @@ export async function PATCH(req: Request) {
       return new Response("Ok");
     }
 
-    await prisma.vote.create({
+    const like = await prisma.vote.create({
       data: {
         type: voteType,
         emailId: session.user.email,
         postId,
       },
     });
+    console.log("like is created", like);
 
     const likesAmt = post.votes.reduce((acc, vote) => {
       if (vote.type === "LIKE") return acc + 1;
