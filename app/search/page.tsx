@@ -1,15 +1,22 @@
 "use client";
 
+import { ExtendedPost } from "@/types/Types";
 import { useState } from "react";
 
 const Page = () => {
   const [inputValue, setInputValue] = useState("");
+  const [results, setResults] = useState([]);
 
   const fetchData = async (value) => {
     await fetch("/api/search")
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
+
+        const results = json.filter((post: ExtendedPost) => {
+          return post && post.slug && post.slug.toLowerCase().includes(value);
+        });
+        setResults(results);
       });
   };
 
@@ -30,7 +37,14 @@ const Page = () => {
           Search
         </button>
       </div>
-      <div></div>
+      <div>
+        {results.map((post: ExtendedPost) => (
+          <div key={post.id}>
+            <h1>{post.slug}</h1>
+            <h1>{post.title}</h1>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
