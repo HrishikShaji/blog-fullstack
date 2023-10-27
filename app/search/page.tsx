@@ -71,24 +71,24 @@ const Page = () => {
   };
   return (
     <div className="min-h-screen w-full pt-20 p-10 flex flex-col gap-2 items-center">
-      <div>
-        <div className="flex gap-2">
+      <div className="w-[50vw] relative">
+        <div className="flex gap-2 relative">
           <input
             onClick={() => setSuggestions(true)}
-            className="p-2 border-2 text-black"
+            className="p-2 border-2 text-black w-full"
             value={inputValue}
             onChange={(e) => handleChange(e.target.value)}
             placeholder="Type to search..."
           />
           <button
             onClick={() => handleSearch()}
-            className="py-2 px-3 border-2 border-white text-white"
+            className="p-2  absolute font-semibold text-black right-0"
           >
             Search
           </button>
         </div>
         {suggestions && (
-          <div className="w-full max-h-[300px] overflow-y-scroll flex flex-col gap-2 ">
+          <div className=" w-full max-h-[300px] overflow-y-scroll absolute z-10 bg-neutral-600 flex flex-col  ">
             {inputValue !== "" ? (
               results.map((post: ExtendedPost) => {
                 const content = post.content as any;
@@ -101,7 +101,7 @@ const Page = () => {
                   <div
                     key={post.id}
                     onClick={() => router.push(`/posts/${post.slug}`)}
-                    className="flex gap-2 cursor-pointer py-1 hover:bg-neutral-600 bg-neutral-800"
+                    className="flex gap-2 cursor-pointer p-1 hover:bg-neutral-500 bg-neutral-600"
                   >
                     {image ? (
                       <Image
@@ -128,26 +128,32 @@ const Page = () => {
           </div>
         )}
       </div>
-      <div className="flex flex-col items-center gap-2">
-        <h1>Sort By</h1>
-        <div className="flex gap-2">
-          <button onClick={() => handleSort("createdAt")}>Date</button>
-          <button onClick={() => handleSort("views")}>Views</button>
-          <button onClick={() => handleSort("votes")}>Likes</button>
-        </div>
-      </div>
-      <div className="flex flex-col items-center gap-2">
-        <h1>Filter By</h1>
-        <div className="flex gap-2">
-          <button onClick={() => handleFilter("style")}>Frontend</button>
-          <button onClick={() => handleFilter("travel")}>Backend</button>
-          <button onClick={() => handleFilter("coding")}>UI/UX</button>
-          <button onClick={() => handleFilter("devops")}>DevOps</button>
-          <button onClick={() => handleFilter("ai")}>AI</button>
-          <button onClick={() => handleFilter("blockchain")}>Blockchain</button>
-        </div>
-      </div>
       <div className="w-full">
+        {finalResults.length > 0 && (
+          <>
+            <div className="flex flex-col items-center gap-2">
+              <h1>Sort By</h1>
+              <div className="flex gap-2">
+                <button onClick={() => handleSort("createdAt")}>Date</button>
+                <button onClick={() => handleSort("views")}>Views</button>
+                <button onClick={() => handleSort("votes")}>Likes</button>
+              </div>
+            </div>
+            <div className="flex flex-col items-center gap-2">
+              <h1>Filter By</h1>
+              <div className="flex gap-2">
+                <button onClick={() => handleFilter("style")}>Frontend</button>
+                <button onClick={() => handleFilter("travel")}>Backend</button>
+                <button onClick={() => handleFilter("coding")}>UI/UX</button>
+                <button onClick={() => handleFilter("devops")}>DevOps</button>
+                <button onClick={() => handleFilter("ai")}>AI</button>
+                <button onClick={() => handleFilter("blockchain")}>
+                  Blockchain
+                </button>
+              </div>
+            </div>
+          </>
+        )}
         {finalResults.map((post: ExtendedPost) => {
           const content = post.content as any;
           const images = content.blocks.filter(
