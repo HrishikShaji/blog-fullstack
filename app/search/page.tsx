@@ -7,6 +7,13 @@ import { useRouter } from "next/navigation";
 import { CustomDropdown } from "@/components/CustomDropdown";
 import { categoryValues, sortValues } from "@/utils/data";
 import { PostImage } from "@/components/PostImage";
+import { Expand } from "lucide-react";
+
+type RecentSearch = {
+  query: string;
+  slug: string;
+  content?: any;
+};
 
 const Page = () => {
   const [inputValue, setInputValue] = useState("");
@@ -16,7 +23,7 @@ const Page = () => {
   const router = useRouter();
   const searchRef = useRef(null);
   const inputRef = useRef(null);
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
   const fetchData = async (value: string) => {
     if (value !== "") {
       await fetch("/api/search")
@@ -41,7 +48,6 @@ const Page = () => {
   useEffect(() => {
     const recentSearches = localStorage.getItem("recent-searches");
     if (recentSearches) {
-      console.log(recentSearches);
       setRecentSearches(JSON.parse(recentSearches));
     }
   }, []);
@@ -62,11 +68,26 @@ const Page = () => {
           });
           setFinalResults(results);
         });
-      recentSearches.push(query);
-      if (recentSearches.length > 10) {
-        recentSearches.shift();
+      const queryExists = recentSearches.filter((search) => {
+        return search.query === query;
+      });
+
+      if (results.length > 0 && queryExists.length === 0) {
+        const images = results[0].content.blocks.filter(
+          (block: any) => block.type == "image",
+        );
+        const image = images?.length > 0 ? images[0].data.file.url : null;
+        const data: RecentSearch = {
+          query: query,
+          slug: results[0].slug,
+          content: image,
+        };
+        recentSearches.push(data);
+        if (recentSearches.length > 10) {
+          recentSearches.shift();
+        }
+        localStorage.setItem("recent-searches", JSON.stringify(recentSearches));
       }
-      localStorage.setItem("recent-searches", JSON.stringify(recentSearches));
     }
   };
 
@@ -110,7 +131,37 @@ const Page = () => {
                 );
               })
             ) : (
-              <h1>Suggestions</h1>
+              <div className="flex flex-col gap-2">
+                <h1>Recent Searches</h1>
+                <div>
+                  {recentSearches.map((post, i) => {
+                    return (
+                      <div
+                        key={i}
+                        onClick={() => router.push(`/posts/${post.slug}`)}
+                        className="flex gap-2 cursor-pointer p-1 hover:bg-neutral-500 bg-neutral-600"
+                      >
+                        {post.content ? (
+                          <Image
+                            src={post.content}
+                            height={1000}
+                            width={1000}
+                            alt="image"
+                            className="h-10 w-10 object-cover"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 bg-gray-500 flex justify-center items-center">
+                            ?
+                          </div>
+                        )}
+                        <div>
+                          <h1>{post.query}</h1>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         )}
