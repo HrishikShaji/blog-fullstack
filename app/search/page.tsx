@@ -4,6 +4,7 @@ import { ExtendedPost } from "@/types/Types";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { CustomDropdown } from "@/components/CustomDropdown";
 
 const Page = () => {
   const [inputValue, setInputValue] = useState("");
@@ -17,7 +18,6 @@ const Page = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const fetchData = async (value: string) => {
     if (value !== "") {
-      console.log(value);
       await fetch("/api/search")
         .then((response) => response.json())
         .then((json) => {
@@ -36,7 +36,6 @@ const Page = () => {
     if (e.target !== searchRef.current && e.target !== inputRef.current) {
       setSuggestions(false);
     }
-    console.log(e.target === searchRef.current);
   });
 
   const handleChange = (value: string) => {
@@ -44,6 +43,47 @@ const Page = () => {
     fetchData(value);
   };
 
+  const sortValues = [
+    {
+      title: "Date",
+      value: "createdAt",
+    },
+    {
+      title: "Views",
+      value: "views",
+    },
+    {
+      title: "Votes",
+      value: "votes",
+    },
+  ];
+
+  const categoryValues = [
+    {
+      title: "Frontend",
+      value: "style",
+    },
+    {
+      title: "Backend",
+      value: "travel",
+    },
+    {
+      title: "UI/UX",
+      value: "coding",
+    },
+    {
+      title: "Blockchain",
+      value: "blockchain",
+    },
+    {
+      title: "DevOps",
+      value: "devops",
+    },
+    {
+      title: "AI",
+      value: "ai",
+    },
+  ];
   const handleSearch = async () => {
     setSuggestions(false);
     if (inputValue !== "") {
@@ -60,35 +100,6 @@ const Page = () => {
     }
   };
 
-  const handleSort = async (sort: string) => {
-    setSelectedSort(sort);
-    setIsSortOpen(false);
-    await fetch(`/api/search?sort=${sort}`)
-      .then((response) => response.json())
-      .then((json) => {
-        const results = json.filter((post: ExtendedPost) => {
-          return (
-            post && post.slug && post.slug.toLowerCase().includes(inputValue)
-          );
-        });
-        setFinalResults(results);
-      });
-  };
-
-  const handleFilter = async (filter: string) => {
-    setSelectedCategory(filter);
-    setIsCategoryOpen(false);
-    await fetch(`/api/search?filter=${filter}`)
-      .then((response) => response.json())
-      .then((json) => {
-        const results = json.filter((post: ExtendedPost) => {
-          return (
-            post && post.slug && post.slug.toLowerCase().includes(inputValue)
-          );
-        });
-        setFinalResults(results);
-      });
-  };
   return (
     <div className="min-h-screen w-full pt-20 p-10 flex flex-col gap-2 items-center">
       <div className="w-[50vw] relative">
@@ -155,84 +166,18 @@ const Page = () => {
       <div className="w-full">
         {finalResults.length > 0 && (
           <div className="flex gap-2">
-            <div className="flex flex-col items-center gap-2 w-[200px]">
-              <div className="flex gap-2 border-2 border-white  justify-between p-2 w-full">
-                <h1>{selectedSort || "Sort By"}</h1>
-                <button onClick={() => setIsSortOpen(!isSortOpen)}>
-                  Select
-                </button>
-              </div>
-              {isSortOpen && (
-                <div className="flex flex-col bg-neutral-500  w-full">
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleSort("createdAt")}
-                  >
-                    Date
-                  </button>
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleSort("views")}
-                  >
-                    Views
-                  </button>
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleSort("votes")}
-                  >
-                    Likes
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col items-center gap-2 w-[200px]">
-              <div className="flex gap-2 border-2 border-white  justify-between p-2 w-full">
-                <h1>{selectedCategory || "Category"}</h1>
-                <button onClick={() => setIsCategoryOpen(!isCategoryOpen)}>
-                  Select
-                </button>
-              </div>
-              {isCategoryOpen && (
-                <div className="flex flex-col bg-neutral-500 w-full">
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleFilter("style")}
-                  >
-                    Frontend
-                  </button>
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleFilter("travel")}
-                  >
-                    Backend
-                  </button>
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleFilter("coding")}
-                  >
-                    UI/UX
-                  </button>
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleFilter("devops")}
-                  >
-                    DevOps
-                  </button>
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleFilter("ai")}
-                  >
-                    AI
-                  </button>
-                  <button
-                    className="border-b-2 border-white py-2"
-                    onClick={() => handleFilter("blockchain")}
-                  >
-                    Blockchain
-                  </button>
-                </div>
-              )}
-            </div>
+            <CustomDropdown
+              setFinalResults={setFinalResults}
+              inputValue={inputValue}
+              values={sortValues}
+              type="sort"
+            />
+            <CustomDropdown
+              setFinalResults={setFinalResults}
+              inputValue={inputValue}
+              values={categoryValues}
+              type="filter"
+            />
           </div>
         )}
         {finalResults.map((post: ExtendedPost) => {
