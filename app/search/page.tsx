@@ -1,21 +1,19 @@
 "use client";
 
 import { ExtendedPost } from "@/types/Types";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { CustomDropdown } from "@/components/CustomDropdown";
+import { categoryValues, sortValues } from "@/utils/data";
+import { PostImage } from "@/components/PostImage";
 
 const Page = () => {
   const [inputValue, setInputValue] = useState("");
   const [results, setResults] = useState([]);
   const [finalResults, setFinalResults] = useState([]);
   const [suggestions, setSuggestions] = useState(false);
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const [selectedSort, setSelectedSort] = useState(null);
   const router = useRouter();
-  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const fetchData = async (value: string) => {
     if (value !== "") {
       await fetch("/api/search")
@@ -32,58 +30,19 @@ const Page = () => {
   const searchRef = useRef(null);
   const inputRef = useRef(null);
 
-  window.addEventListener("click", (e) => {
-    if (e.target !== searchRef.current && e.target !== inputRef.current) {
-      setSuggestions(false);
-    }
-  });
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      if (e.target !== searchRef.current && e.target !== inputRef.current) {
+        setSuggestions(false);
+      }
+    });
+  }, []);
 
   const handleChange = (value: string) => {
     setInputValue(value);
     fetchData(value);
   };
 
-  const sortValues = [
-    {
-      title: "Date",
-      value: "createdAt",
-    },
-    {
-      title: "Views",
-      value: "views",
-    },
-    {
-      title: "Votes",
-      value: "votes",
-    },
-  ];
-
-  const categoryValues = [
-    {
-      title: "Frontend",
-      value: "style",
-    },
-    {
-      title: "Backend",
-      value: "travel",
-    },
-    {
-      title: "UI/UX",
-      value: "coding",
-    },
-    {
-      title: "Blockchain",
-      value: "blockchain",
-    },
-    {
-      title: "DevOps",
-      value: "devops",
-    },
-    {
-      title: "AI",
-      value: "ai",
-    },
-  ];
   const handleSearch = async () => {
     setSuggestions(false);
     if (inputValue !== "") {
@@ -126,31 +85,13 @@ const Page = () => {
           >
             {inputValue !== "" ? (
               results.map((post: ExtendedPost) => {
-                const content = post.content as any;
-                const images = content.blocks.filter(
-                  (block: any) => block.type == "image",
-                );
-                const image =
-                  images?.length > 0 ? images[0].data.file.url : null;
                 return (
                   <div
                     key={post.id}
                     onClick={() => router.push(`/posts/${post.slug}`)}
                     className="flex gap-2 cursor-pointer p-1 hover:bg-neutral-500 bg-neutral-600"
                   >
-                    {image ? (
-                      <Image
-                        alt="image"
-                        height={1000}
-                        width={1000}
-                        className="h-10 w-10 object-cover"
-                        src={image}
-                      />
-                    ) : (
-                      <div className="h-10 w-10 bg-gray-500 flex justify-center items-center">
-                        ?
-                      </div>
-                    )}
+                    <PostImage content={post.content} height="10" width="10" />
                     <div>
                       <h1>{post.title}</h1>
                     </div>
@@ -182,29 +123,12 @@ const Page = () => {
         )}
         {finalResults.map((post: ExtendedPost) => {
           const content = post.content as any;
-          const images = content.blocks.filter(
-            (block: any) => block.type == "image",
-          );
           const desc = content.blocks.filter(
             (block: any) => block.type == "paragraph",
           );
-          console.log(desc);
-          const image = images?.length > 0 ? images[0].data.file.url : null;
           return (
             <div key={post.id} className="w-full p-5 flex gap-2">
-              {image ? (
-                <Image
-                  alt="image"
-                  height={1000}
-                  width={1000}
-                  className="h-40 w-40 object-cover"
-                  src={image}
-                />
-              ) : (
-                <div className="h-40 w-40 bg-gray-500 flex justify-center items-center">
-                  ?
-                </div>
-              )}
+              <PostImage content={post.content} height="40" width="40" />
               <div className="flex flex-col justify-between">
                 <div>
                   <h1>{post.title}</h1>
