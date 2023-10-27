@@ -1,7 +1,7 @@
 "use client";
 
 import { ExtendedPost } from "@/types/Types";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -25,6 +25,16 @@ const Page = () => {
     }
   };
 
+  const searchRef = useRef(null);
+  const inputRef = useRef(null);
+
+  window.addEventListener("click", (e) => {
+    if (e.target !== searchRef.current && e.target !== inputRef.current) {
+      setSuggestions(false);
+    }
+    console.log(e.target === searchRef.current);
+  });
+
   const handleChange = (value: string) => {
     setInputValue(value);
     fetchData(value);
@@ -32,16 +42,18 @@ const Page = () => {
 
   const handleSearch = async () => {
     setSuggestions(false);
-    await fetch("/api/search")
-      .then((response) => response.json())
-      .then((json) => {
-        const results = json.filter((post: ExtendedPost) => {
-          return (
-            post && post.slug && post.slug.toLowerCase().includes(inputValue)
-          );
+    if (inputValue !== "") {
+      await fetch("/api/search")
+        .then((response) => response.json())
+        .then((json) => {
+          const results = json.filter((post: ExtendedPost) => {
+            return (
+              post && post.slug && post.slug.toLowerCase().includes(inputValue)
+            );
+          });
+          setFinalResults(results);
         });
-        setFinalResults(results);
-      });
+    }
   };
 
   const handleSort = async (sort: string) => {
@@ -74,6 +86,7 @@ const Page = () => {
       <div className="w-[50vw] relative">
         <div className="flex gap-2 relative">
           <input
+            ref={inputRef}
             onClick={() => setSuggestions(true)}
             className="p-2 border-2 text-black w-full"
             value={inputValue}
@@ -88,7 +101,10 @@ const Page = () => {
           </button>
         </div>
         {suggestions && (
-          <div className=" w-full max-h-[300px] overflow-y-scroll absolute z-10 bg-neutral-600 flex flex-col  ">
+          <div
+            ref={searchRef}
+            className=" w-full max-h-[300px] overflow-y-scroll absolute z-10 bg-neutral-600 flex flex-col  "
+          >
             {inputValue !== "" ? (
               results.map((post: ExtendedPost) => {
                 const content = post.content as any;
