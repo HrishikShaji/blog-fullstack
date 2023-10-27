@@ -1,7 +1,7 @@
 "use client";
 
 import { ExtendedPost } from "@/types/Types";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface CustomDropdownProps {
   values: any[];
@@ -18,8 +18,20 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const dropdownRef = useRef(null);
+  const selectRef = useRef(null);
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      if (e.target !== dropdownRef.current && e.target !== selectRef.current) {
+        setIsOpen(false);
+      }
+    });
+  }, []);
+
   const handleFunction = async (field: string) => {
     setSelectedItem(field);
+    setIsOpen(false);
     await fetch(`/api/search?${type}=${field}`)
       .then((response) => response.json())
       .then((json) => {
@@ -32,13 +44,18 @@ export const CustomDropdown: React.FC<CustomDropdownProps> = ({
       });
   };
   return (
-    <div className="flex flex-col items-center gap-2 w-[200px]">
+    <div className="flex flex-col relative items-center gap-2 w-[200px]">
       <div className="flex gap-2 border-2 border-white  justify-between p-2 w-full">
         <h1>{selectedItem || "Sort By"}</h1>
-        <button onClick={() => setIsOpen(!isOpen)}>Select</button>
+        <button ref={selectRef} onClick={() => setIsOpen(!isOpen)}>
+          Select
+        </button>
       </div>
       {isOpen && (
-        <div className="flex flex-col bg-neutral-500  w-full">
+        <div
+          ref={dropdownRef}
+          className="flex flex-col bg-neutral-500 absolute top-12 w-full"
+        >
           {values.map((item, i) => (
             <button
               key={i}

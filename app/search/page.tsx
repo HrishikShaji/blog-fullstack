@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { CustomDropdown } from "@/components/CustomDropdown";
 import { categoryValues, sortValues } from "@/utils/data";
 import { PostImage } from "@/components/PostImage";
-import { Expand } from "lucide-react";
 
 type RecentSearch = {
   query: string;
@@ -18,7 +17,7 @@ type RecentSearch = {
 const Page = () => {
   const [inputValue, setInputValue] = useState("");
   const [results, setResults] = useState([]);
-  const [finalResults, setFinalResults] = useState([]);
+  const [finalResults, setFinalResults] = useState<ExtendedPost[]>([]);
   const [suggestions, setSuggestions] = useState(false);
   const router = useRouter();
   const searchRef = useRef(null);
@@ -62,7 +61,7 @@ const Page = () => {
     if (inputValue !== "") {
       await fetch("/api/search")
         .then((response) => response.json())
-        .then((json) => {
+        .then((json: ExtendedPost[]) => {
           const results = json.filter((post: ExtendedPost) => {
             return post && post.slug && post.slug.toLowerCase().includes(query);
           });
@@ -72,14 +71,16 @@ const Page = () => {
         return search.query === query;
       });
 
-      if (results.length > 0 && queryExists.length === 0) {
-        const images = results[0].content.blocks.filter(
+      if (finalResults.length > 0 && queryExists.length === 0) {
+        const post = finalResults[0];
+        const content = post.content as any;
+        const images = (content.blocks || []).filter(
           (block: any) => block.type == "image",
         );
         const image = images?.length > 0 ? images[0].data.file.url : null;
         const data: RecentSearch = {
           query: query,
-          slug: results[0].slug,
+          slug: finalResults[0].slug,
           content: image,
         };
         recentSearches.push(data);
