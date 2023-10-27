@@ -14,6 +14,9 @@ const Page = () => {
   const [finalResults, setFinalResults] = useState([]);
   const [suggestions, setSuggestions] = useState(false);
   const router = useRouter();
+  const searchRef = useRef(null);
+  const inputRef = useRef(null);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const fetchData = async (value: string) => {
     if (value !== "") {
       await fetch("/api/search")
@@ -27,9 +30,6 @@ const Page = () => {
     }
   };
 
-  const searchRef = useRef(null);
-  const inputRef = useRef(null);
-
   useEffect(() => {
     window.addEventListener("click", (e) => {
       if (e.target !== searchRef.current && e.target !== inputRef.current) {
@@ -38,24 +38,35 @@ const Page = () => {
     });
   }, []);
 
+  useEffect(() => {
+    const recentSearches = localStorage.getItem("recent-searches");
+    if (recentSearches) {
+      console.log(recentSearches);
+      setRecentSearches(JSON.parse(recentSearches));
+    }
+  }, []);
   const handleChange = (value: string) => {
     setInputValue(value);
     fetchData(value);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (query: string) => {
     setSuggestions(false);
+
     if (inputValue !== "") {
       await fetch("/api/search")
         .then((response) => response.json())
         .then((json) => {
           const results = json.filter((post: ExtendedPost) => {
-            return (
-              post && post.slug && post.slug.toLowerCase().includes(inputValue)
-            );
+            return post && post.slug && post.slug.toLowerCase().includes(query);
           });
           setFinalResults(results);
         });
+      recentSearches.push(query);
+      if (recentSearches.length > 10) {
+        recentSearches.shift();
+      }
+      localStorage.setItem("recent-searches", JSON.stringify(recentSearches));
     }
   };
 
@@ -72,7 +83,7 @@ const Page = () => {
             placeholder="Type to search..."
           />
           <button
-            onClick={() => handleSearch()}
+            onClick={() => handleSearch(inputValue)}
             className="p-2  absolute font-semibold text-black right-0"
           >
             Search
