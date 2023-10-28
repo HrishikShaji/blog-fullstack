@@ -35,12 +35,7 @@ export const PopularPosts = async () => {
                   src={image}
                 />
               )}
-              <Link
-                className="absolute bottom-2 right-2 z-10"
-                href={`/posts/${item.slug}`}
-              >
-                See more
-              </Link>
+              <Link href={`/posts/${item.slug}`}>See more</Link>
             </div>
           );
         })}

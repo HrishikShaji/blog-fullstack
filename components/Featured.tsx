@@ -24,12 +24,7 @@ export const Featured = async () => {
           />
         )}
         <h1 className="absolute z-10 text-4xl font-bold ">{posts[0]?.title}</h1>
-        <Link
-          href={`posts/${posts[0]?.slug}`}
-          className="absolute z-10 text-xl bottom-2 right-2"
-        >
-          Read more
-        </Link>
+        <Link href={`posts/${posts[0]?.slug}`}>Read more</Link>
       </div>
     </div>
   );

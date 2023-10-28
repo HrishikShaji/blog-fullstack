@@ -61,7 +61,7 @@ type PostData = {
   count: number;
 };
 
-export const fetchPosts = async (url: string): Promise<PostData> => {
+export const fetchPosts = async (url: string) => {
   const res = await fetch(url, {
     cache: "no-store",
     headers: {

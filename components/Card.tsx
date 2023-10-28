@@ -85,12 +85,7 @@ export const Card: React.FC<CardProps> = ({ item }) => {
           src={images[0].data.file.url}
         />
       ) : null}
-      <Link
-        href={`/posts/${item.slug}`}
-        className="absolute z-10 bottom-2 right-2"
-      >
-        See more
-      </Link>
+      <Link href={`/posts/${item.slug}`}>See more</Link>
       <div className="absolute z-10 bottom-2 left-2 flex gap-2">
         <button
           className="px-2 py-1 border-white border-2"
