@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { AuthLinks } from "./AuthLinks";
 
 export const Navbar = () => {
   return (
@@ -11,7 +10,6 @@ export const Navbar = () => {
         <Link href="/">Home</Link>
         <Link href="/">Contact</Link>
         <Link href="/">About</Link>
-        <AuthLinks />
       </div>
     </div>
   );
