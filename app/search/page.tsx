@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { CustomDropdown } from "@/components/CustomDropdown";
 import { categoryValues, sortValues } from "@/utils/data";
 import { PostImage } from "@/components/PostImage";
+import { SearchResult } from "@/components/SearchResult";
 
 type RecentSearch = {
   query: string;
@@ -119,16 +120,12 @@ const Page = () => {
             {inputValue !== "" ? (
               results.map((post: ExtendedPost) => {
                 return (
-                  <div
+                  <SearchResult
+                    slug={post.slug}
+                    content={post.content}
+                    title={post.title}
                     key={post.id}
-                    onClick={() => router.push(`/posts/${post.slug}`)}
-                    className="flex gap-2 cursor-pointer p-1 hover:bg-neutral-500 bg-neutral-600"
-                  >
-                    <PostImage content={post.content} height="10" width="10" />
-                    <div>
-                      <h1>{post.title}</h1>
-                    </div>
-                  </div>
+                  />
                 );
               })
             ) : (
@@ -137,28 +134,12 @@ const Page = () => {
                 <div>
                   {recentSearches.map((post, i) => {
                     return (
-                      <div
+                      <SearchResult
+                        slug={post.slug}
+                        content={post.content}
+                        title={post.query}
                         key={i}
-                        onClick={() => router.push(`/posts/${post.slug}`)}
-                        className="flex gap-2 cursor-pointer p-1 hover:bg-neutral-500 bg-neutral-600"
-                      >
-                        {post.content ? (
-                          <Image
-                            src={post.content}
-                            height={1000}
-                            width={1000}
-                            alt="image"
-                            className="h-10 w-10 object-cover"
-                          />
-                        ) : (
-                          <div className="h-10 w-10 bg-gray-500 flex justify-center items-center">
-                            ?
-                          </div>
-                        )}
-                        <div>
-                          <h1>{post.query}</h1>
-                        </div>
-                      </div>
+                      />
                     );
                   })}
                 </div>
