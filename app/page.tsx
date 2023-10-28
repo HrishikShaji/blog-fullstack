@@ -13,12 +13,6 @@ export default function Home({ searchParams }: { searchParams: SearchParams }) {
   return (
     <main className="pt-40 p-10 flex flex-col gap-5">
       <Featured />
-      <PopularPosts />
-      <EditorsPosts />
-      <CategoryList />
-      <div>
-        <CardList page={page} />
-      </div>
     </main>
   );
 }
