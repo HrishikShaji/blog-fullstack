@@ -1,11 +1,12 @@
 import { fetchPosts } from "@/lib/utils";
 import { ExtendedPost } from "@/types/Types";
+import { baseUrl } from "@/utils/data";
 import Image from "next/image";
 import Link from "next/link";
 
 export const PopularPosts = async () => {
   const { posts } = await fetchPosts(
-    `http://localhost:3000/api/posts?page=1&popular=true`,
+    `${baseUrl}/api/posts?page=1&popular=true`,
   );
   if (!posts) return <div>Loading...</div>;
   return (

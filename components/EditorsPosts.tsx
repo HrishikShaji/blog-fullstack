@@ -1,12 +1,11 @@
 import { fetchPosts } from "@/lib/utils";
 import { ExtendedPost } from "@/types/Types";
+import { baseUrl } from "@/utils/data";
 import Image from "next/image";
 import Link from "next/link";
 
 export const EditorsPosts = async () => {
-  const { posts } = await fetchPosts(
-    `http://localhost:3000/api/posts?page=1&editor=true`,
-  );
+  const { posts } = await fetchPosts(`${baseUrl}/api/posts?page=1&editor=true`);
   if (!posts) return <div>Loading...</div>;
   return (
     <div className="flex flex-col gap-5">

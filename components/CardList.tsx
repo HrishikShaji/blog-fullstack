@@ -2,6 +2,7 @@ import { ExtendedPost } from "@/types/Types";
 import { Card } from "./Card";
 import { Pagination } from "./Pagination";
 import { fetchPosts } from "@/lib/utils";
+import { baseUrl } from "@/utils/data";
 
 interface CardListProps {
   page: number;
@@ -11,7 +12,7 @@ interface CardListProps {
 
 export const CardList: React.FC<CardListProps> = async ({ page, cat, sec }) => {
   const { posts, count } = await fetchPosts(
-    `http://localhost:3000/api/posts?page=${page}&cat=${cat || ""}&${sec}=true`,
+    `${baseUrl}/api/posts?page=${page}&cat=${cat || ""}&${sec}=true`,
   );
   const POST_PER_PAGE = 2;
 

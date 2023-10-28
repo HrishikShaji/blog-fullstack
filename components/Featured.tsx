@@ -1,9 +1,10 @@
 import { fetchPosts } from "@/lib/utils";
+import { baseUrl } from "@/utils/data";
 import Image from "next/image";
 import Link from "next/link";
 
 export const Featured = async () => {
-  const { posts } = await fetchPosts(`http://localhost:3000/api/posts?page=1`);
+  const { posts } = await fetchPosts(`${baseUrl}/api/posts?page=1`);
 
   if (!posts[0]) return <div>NO POSTS YET...</div>;
   const content = posts[0]?.content as any;

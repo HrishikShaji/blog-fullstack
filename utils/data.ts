@@ -1,3 +1,5 @@
+export const baseUrl = process.env.NEXTAUTH_URL;
+
 export const sortValues = [
   {
     title: "Date",
