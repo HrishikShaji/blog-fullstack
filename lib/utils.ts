@@ -64,11 +64,17 @@ type PostData = {
 export const fetchPosts = async (url: string): Promise<PostData> => {
   const res = await fetch(url, {
     cache: "no-store",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 
   if (!res.ok) {
-    throw new Error("Failed");
+    const responseText = await res.text();
+    throw new Error(`Failed ${responseText}`);
   }
+  const jsonText = await res.text();
+  console.log(jsonText);
 
-  return res.json();
+  return JSON.parse(jsonText);
 };
