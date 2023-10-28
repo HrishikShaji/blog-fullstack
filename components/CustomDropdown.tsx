@@ -1,5 +1,3 @@
-"use client";
-
 import { ExtendedPost } from "@/types/Types";
 import { useEffect, useRef, useState } from "react";
 

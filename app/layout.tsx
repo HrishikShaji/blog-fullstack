@@ -2,7 +2,6 @@ import { Navbar } from "@/components/Navbar";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
-import AuthProvider from "@/providers/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
 import Providers from "@/components/Providers";
 

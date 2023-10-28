@@ -7,7 +7,6 @@ export async function PATCH(req: Request) {
     const body = await req.json();
 
     const { postId, voteType } = body;
-    console.log(postId, voteType);
     const session = await getAuthSession();
 
     if (!session?.user?.email) {
@@ -44,7 +43,7 @@ export async function PATCH(req: Request) {
         });
         return new Response("OK");
       }
-      const like = await prisma.vote.updateMany({
+      await prisma.vote.updateMany({
         where: {
           postId,
           emailId: session.user.email,
@@ -54,24 +53,21 @@ export async function PATCH(req: Request) {
         },
       });
 
-      console.log("like is updated", like);
-
       const likesAmt = post.votes.reduce((acc, vote) => {
         if (vote.type === "LIKE") return acc + 1;
         if (vote.type === "UNLIKE") return acc - 1;
         return acc;
       }, 0);
-      return new Response("Ok");
+      return new Response(JSON.stringify(likesAmt));
     }
 
-    const like = await prisma.vote.create({
+    await prisma.vote.create({
       data: {
         type: voteType,
         emailId: session.user.email,
         postId,
       },
     });
-    console.log("like is created", like);
 
     const likesAmt = post.votes.reduce((acc, vote) => {
       if (vote.type === "LIKE") return acc + 1;
@@ -79,7 +75,7 @@ export async function PATCH(req: Request) {
       return acc;
     }, 0);
 
-    return new Response("OK");
+    return new Response(JSON.stringify(likesAmt));
   } catch (error) {
     if (error instanceof z.ZodError) {
       return new Response(error.message, { status: 422 });

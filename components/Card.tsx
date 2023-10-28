@@ -1,7 +1,7 @@
 "use client";
 import { formatTimeToNow } from "@/lib/utils";
 import { ExtendedPost } from "@/types/Types";
-import { Vote, VoteType } from "@prisma/client";
+import { VoteType } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -33,7 +33,6 @@ export const Card: React.FC<CardProps> = ({ item }) => {
   useEffect(() => {
     setCurrentVote(initialVote?.type);
   }, [initialVote?.type]);
-  console.log(currentVote);
   const { mutate: vote } = useMutation({
     mutationFn: async (voteType: VoteType) => {
       const payload = {

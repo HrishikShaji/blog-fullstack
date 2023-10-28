@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
       data: { ...body, userEmail: session?.user?.email },
     });
 
-    const originalComment = await prisma.comment.findUnique({
+    await prisma.comment.findUnique({
       where: {
         id: body.parentId,
       },

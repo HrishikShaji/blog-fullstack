@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/connect";
-import { fi } from "date-fns/esm/locale";
 
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
   const sortBy = searchParams.get("sort")?.toString();
   const filterBy = searchParams.get("filter")?.toString();
-  console.log(filterBy);
   const sort = sortBy as string;
   const order = "desc";
   const orderBy = { [sort]: order };
