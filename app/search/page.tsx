@@ -1,12 +1,11 @@
 "use client";
 
 import { ExtendedPost } from "@/types/Types";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { CustomDropdown } from "@/components/CustomDropdown";
 import { categoryValues, sortValues } from "@/utils/data";
 import { PostImage } from "@/components/PostImage";
-import { SearchResult } from "@/components/SearchResult";
 import { SearchBar } from "@/components/SearchBar";
 
 const Page = () => {
@@ -16,6 +15,8 @@ const Page = () => {
     <div className="min-h-screen w-full pt-20 p-10 flex flex-col gap-2 items-center">
       <SearchBar
         finalResults={finalResults}
+        inputValue={inputValue}
+        setInputValue={setInputValue}
         setFinalResults={setFinalResults}
       />
       <div className="w-full">
@@ -42,7 +43,7 @@ const Page = () => {
           );
           return (
             <div key={post.id} className="w-full p-5 flex gap-2">
-              <PostImage content={post.content} height="40" width="40" />
+              <PostImage content={post.content} size="medium" />
               <div className="flex flex-col justify-between">
                 <div>
                   <h1>{post.title}</h1>

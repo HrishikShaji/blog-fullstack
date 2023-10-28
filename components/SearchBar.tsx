@@ -1,5 +1,3 @@
-"use client";
-
 import { ExtendedPost } from "@/types/Types";
 import { useEffect, useRef, useState } from "react";
 import { SearchResult } from "./SearchResult";
@@ -7,6 +5,8 @@ import { SearchResult } from "./SearchResult";
 interface SearchBarProps {
   setFinalResults: (values: any) => void;
   finalResults: ExtendedPost[];
+  inputValue: string;
+  setInputValue: (input: string) => void;
 }
 
 type RecentSearch = {
@@ -14,11 +14,15 @@ type RecentSearch = {
   slug: string;
   content?: any;
 };
-export const SearchBar = ({ setFinalResults, finalResults }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({
+  inputValue,
+  setFinalResults,
+  finalResults,
+  setInputValue,
+}) => {
   const [suggestions, setSuggestions] = useState(false);
   const searchRef = useRef(null);
   const inputRef = useRef(null);
-  const [inputValue, setInputValue] = useState("");
   const [results, setResults] = useState([]);
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
   const fetchData = async (value: string) => {

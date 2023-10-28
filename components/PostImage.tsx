@@ -1,20 +1,15 @@
 "use client";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface PostImageProps {
   content: any;
-  height: string;
-  width: string;
+  size: "small" | "medium";
 }
 
-export const PostImage: React.FC<PostImageProps> = ({
-  content,
-  height,
-  width,
-}) => {
+export const PostImage: React.FC<PostImageProps> = ({ content, size }) => {
   const [img, setImg] = useState(null);
-
   useEffect(() => {
     // Use useEffect to fetch and set the image URL
     if (content && content.blocks) {
@@ -31,7 +26,10 @@ export const PostImage: React.FC<PostImageProps> = ({
   if (!img)
     return (
       <div
-        className={`h-${height} w-${width} bg-gray-500 flex justify-center items-center`}
+        className={cn("bg-gray-500 flex justify-center items-center", {
+          "w-10 h-10": size === "small",
+          "w-40 h-40": size === "medium",
+        })}
       >
         ?
       </div>
@@ -42,7 +40,10 @@ export const PostImage: React.FC<PostImageProps> = ({
       alt="image"
       height={1000}
       width={1000}
-      className={`h-${height} w-${width} object-cover`}
+      className={cn("object-cover", {
+        "w-10 h-10": size === "small",
+        "w-40 h-40": size === "medium",
+      })}
       src={img}
     />
   );
